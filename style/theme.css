@@ -1,0 +1,23 @@
+body {
+  color: #dddddd;
+  background-color: #222222;
+}
+
+main {
+  background-color: #323232;
+}
+
+menu {  
+  button, input[type="file"]::file-selector-button {
+    color: #dddddd;
+    background-color: #007bff;
+  }
+
+  button:hover, input[type="file"]::file-selector-button:hover {
+    background-color: #0056b3;
+  }
+}
+
+.error {
+  color: #ee1212;
+}

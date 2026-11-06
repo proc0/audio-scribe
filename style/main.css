@@ -1,0 +1,50 @@
+html {
+  font-family: 'Roboto', 'Arial', sans-serif;
+  font-optical-sizing: auto;
+  font-size: 0.15in;
+}
+
+body, h1, main, menu {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+body, h1 {
+  width: 100%;
+  align-items: center;
+}
+
+main {
+  width: 50%;
+  align-items: left;
+}
+
+menu {
+  #file-picker {
+    appearance: base-select;
+    font-family: inherit;
+    font-size: 1.3rem;
+    width: 9.8rem;
+  }
+
+  button, input[type="file"]::file-selector-button {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.2rem;
+  }
+
+  input[type="file"] {
+    color: transparent !important;
+  }
+
+  button:hover, input[type="file"]::file-selector-button:hover {
+    cursor: pointer;
+  }
+}
+
+.error {
+  font-family: inherit;
+  font-size: 1.4rem;
+}
