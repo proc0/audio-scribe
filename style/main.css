@@ -19,28 +19,45 @@ body, h1 {
 main {
   width: 50%;
   align-items: left;
+  margin-top: 3rem;
 }
 
 menu {
-  #file-picker {
-    appearance: base-select;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  padding: 0.75rem 0.75rem 2rem 0.75rem;
+  
+  .picker-button {
+    display: flex;
+    flex-direction: column;
     font-family: inherit;
-    font-size: 1.3rem;
-    width: 9.8rem;
-  }
-
-  button, input[type="file"]::file-selector-button {
+    font-size: 1.5rem;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.2rem;
+    height: 3rem;
+    width: 3rem;
+    padding: 0.3rem 0.4rem;
+    border-radius: 0.4rem;
   }
 
-  input[type="file"] {
-    color: transparent !important;
+  .picker-button label {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
   }
 
-  button:hover, input[type="file"]::file-selector-button:hover {
+  .picker-button:hover, .picker-button label:hover {
     cursor: pointer;
+  }
+
+  .picker-button:hover {
+    & label::after {
+      content: attr(title);
+      font-size: 1rem;
+      margin: 1rem 0 0;
+      width: 400%;
+      text-align: left;
+    }
   }
 }
 
