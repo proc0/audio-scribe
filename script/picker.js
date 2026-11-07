@@ -14,60 +14,83 @@ function isAudioFile(fileName) {
 }
 
 class AudioFile {
-	constructor(name, path, size) {
-		this.name = name
-		this.path = path
-		this.size = size
+	constructor(file) {
+		this.name = file.name
+		this.path = file.path
+		this.size = file.size
 	}
+}
+
+async function* traverseSync(entry, path) {
+  if (entry.kind === "file") {
+    const file = await entry.getFile()
+
+    if (file !== null) {
+    	file.path = path
+      yield file
+    }
+  } else if (entry.kind === "directory") {
+  	const dirPath = path.length ? `${path}/${entry.name}` : entry.name;
+
+    for await (const handle of entry.values()) {
+      yield* traverseSync(handle, dirPath);
+    }
+  }
+}
+
+async function traverse(entry, path, files) {
+  if (entry.kind === "file") {
+    const file = await entry.getFile();
+
+    if (file !== null) {
+    	file.path = path
+      files.push(file)
+    }
+  } else if (entry.kind === "directory") {
+  	const dirPath = path.length ? `${path}/${entry.name}` : entry.name;
+
+    for await (const handle of entry.values()) {
+      await traverse(handle, dirPath, files);
+    }
+  }
+
+  return files
 }
 
 export class FSAPicker {
 	async selectFolder() {
-	    let rootHandle;
-	    try {
-	      rootHandle = await window.showDirectoryPicker({ mode: 'read' });
-	    } catch (error) {
-	      if (error.name === 'AbortError') return [];
-	      throw error;
+    let rootDir;
+    try {
+      rootDir = await window.showDirectoryPicker({ mode: 'read' });
+    } catch (error) {
+      if (error.name === 'AbortError') return [];
+      throw error;
+    }
+
+		const files = await traverse(rootDir, '', [])
+		const audioFiles = files
+			.filter((file) => isAudioFile(file.name))
+			.map((file) => new AudioFile(file))
+
+    console.log(audioFiles)
+    // return results;
+	}
+	
+	async selectFolderSync() {
+    let rootDir;
+    try {
+      rootDir = await window.showDirectoryPicker({ mode: 'read' });
+    } catch (error) {
+      if (error.name === 'AbortError') return [];
+      throw error;
+    }
+
+		for await (const file of traverseSync(rootDir, '')) {
+	    if (isAudioFile(file.name)) {
+	      const audioFile = new AudioFile(file)
+		  	console.log(audioFile);
 	    }
-
-			async function* traverseSync(entry, currentPath) {
-			  const path = currentPath ? `${currentPath}/${entry.name}` : entry.name;
-			  
-			  if (entry.kind === "file") {
-			    const file = await entry.getFile();
-
-			    if (file !== null && isAudioFile(entry.name)) {
-			      const audioFile = new AudioFile(entry.name, path, entry.size)
-			      yield audioFile;
-			    }
-			  } else if (entry.kind === "directory") {
-			    for await (const handle of entry.values()) {
-			      yield* traverseSync(handle, path);
-			    }
-			  }
-			}
-
-			for await (const audioFile of traverseSync(rootHandle, '')) {
-			  console.log(audioFile);
-			}
-	    // const results = [];
-	    // const walk = async (handle, currentPath) => {
-	    //   for await (const entry of handle.values()) {
-	    //     const path = currentPath ? `${currentPath}/${entry.name}` : entry.name;
-
-	    //     if (entry.kind === 'directory') {
-	    //       await walk(entry, path);
-	    //     } else if (isAudioFile(entry.name)) {
-	    //       const file = await entry.getFile();
-	    //       results.push({ path, size: file.size, lastModified: new Date(file.lastModified) });
-	    //     }
-	    //   }
-	    // };
-
-	    // await walk(rootHandle, '');
-	    // console.log(results)
-	    // return results;
+		}
 	}
 
 	async selectFile() {
