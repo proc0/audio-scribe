@@ -12,15 +12,25 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" />
 	<link rel="stylesheet" href="style/main.css" />
 	<link rel="stylesheet" href="style/theme.css" />
-	<script src="script/main.js"></script>
+	<script type="module" src="script/main.js"></script>
 </head>
-<template id="OriginPrivateFileSystem">
-	<input type="file" id="file-picker" webkitdirectory directory multiple />
-</template>
 <template id="FileSystemAccess">
+	<button id="folder-picker">
+		<label>Choose Folder</label>
+	</button>
 	<button id="file-picker">
 		<label>Choose Files</label>
 	</button>
+</template>
+<template id="OriginPrivateFileSystem">
+	<button id="folder-picker">
+		<label>Choose Folder</label>
+	</button>
+	<input type="file" id="input-folder-picker" webkitdirectory directory multiple style="display: none"/>
+	<button id="file-picker">
+		<label>Choose Files</label>
+	</button>
+	<input type="file" id="input-file-picker" multiple style="display: none"/>
 </template>
 <template id="None">
 	<label class="error">Error! This browser does not have a compatible file system API.</label>
@@ -30,6 +40,6 @@
 	<main>
 		<menu id="controls"></menu>
 	</main>
-	<script src="script/init.js"></script>
+	<script type="module" src="script/init.js"></script>
 </body>
 </html>
