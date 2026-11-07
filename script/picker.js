@@ -13,6 +13,14 @@ function isAudioFile(fileName) {
   return AUDIO_EXTENSIONS.includes(ext);
 }
 
+class AudioFile {
+	constructor(name, path, size) {
+		this.name = name
+		this.path = path
+		this.size = size
+	}
+}
+
 export class FSAPicker {
 	async selectFolder() {
 	    let rootHandle;
@@ -23,23 +31,43 @@ export class FSAPicker {
 	      throw error;
 	    }
 
-	    const results = [];
-	    const walk = async (handle, currentPath) => {
-	      for await (const entry of handle.values()) {
-	        const path = currentPath ? `${currentPath}/${entry.name}` : entry.name;
+			async function* traverseSync(entry, currentPath) {
+			  const path = currentPath ? `${currentPath}/${entry.name}` : entry.name;
+			  
+			  if (entry.kind === "file") {
+			    const file = await entry.getFile();
 
-	        if (entry.kind === 'directory') {
-	          await walk(entry, path);
-	        } else if (isAudioFile(entry.name)) {
-	          const file = await entry.getFile();
-	          results.push({ path, size: file.size, lastModified: new Date(file.lastModified) });
-	        }
-	      }
-	    };
+			    if (file !== null && isAudioFile(entry.name)) {
+			      const audioFile = new AudioFile(entry.name, path, entry.size)
+			      yield audioFile;
+			    }
+			  } else if (entry.kind === "directory") {
+			    for await (const handle of entry.values()) {
+			      yield* traverseSync(handle, path);
+			    }
+			  }
+			}
 
-	    await walk(rootHandle, '');
-	    console.log(results)
-	    return results;
+			for await (const audioFile of traverseSync(rootHandle, '')) {
+			  console.log(audioFile);
+			}
+	    // const results = [];
+	    // const walk = async (handle, currentPath) => {
+	    //   for await (const entry of handle.values()) {
+	    //     const path = currentPath ? `${currentPath}/${entry.name}` : entry.name;
+
+	    //     if (entry.kind === 'directory') {
+	    //       await walk(entry, path);
+	    //     } else if (isAudioFile(entry.name)) {
+	    //       const file = await entry.getFile();
+	    //       results.push({ path, size: file.size, lastModified: new Date(file.lastModified) });
+	    //     }
+	    //   }
+	    // };
+
+	    // await walk(rootHandle, '');
+	    // console.log(results)
+	    // return results;
 	}
 
 	async selectFile() {
@@ -55,16 +83,16 @@ export class FSAPicker {
 			  excludeAcceptAllOption: true,
 			  multiple: true,
 			};
-			
-	    let rootHandle;
+
+	    let fileList = [];
 	    try {
-	      rootHandle = await window.showOpenFilePicker(options);
+	      fileList = await window.showOpenFilePicker(options);
 	    } catch (error) {
 	      if (error.name === 'AbortError') return [];
 	      throw error;
 	    }
 
-	    console.log(rootHandle)
+	    console.log(fileList)
 	}
 }
 
