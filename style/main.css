@@ -27,8 +27,8 @@ menu {
   justify-content: space-evenly;
   align-items: flex-start;
   padding: 0.75rem 0.75rem 2rem 0.75rem;
-  
-  .picker-button {
+
+  .icon-button {
     display: flex;
     flex-direction: column;
     font-family: inherit;
@@ -40,21 +40,22 @@ menu {
     border-radius: 0.4rem;
   }
 
-  .picker-button label {
+  .icon-button label {
     display: flex;
     width: 100%;
     flex-direction: column;
   }
 
-  .picker-button:hover, .picker-button label:hover {
+  .icon-button:hover, .icon-button label:hover {
     cursor: pointer;
   }
 
-  .picker-button:hover {
+  .icon-button:hover {
     & label::after {
       content: attr(title);
       font-size: 1rem;
-      margin: 1rem 0 0;
+      margin-top: 1rem;
+      margin-left: -80%;
       width: 400%;
       text-align: left;
     }

@@ -5,9 +5,12 @@ import {
 	CONTROLS_ID,
 	ERROR_LABEL,
 	FILE_PICKER_ID,
-	FOLDER_PICKER_ID 
+	FOLDER_PICKER_ID,
+	CLEAR_CACHE_ID,
+	LOAD_MODEL_ID,
 } from './const'
 import { OPFSPicker, FSAPicker } from './picker'
+import { AudioModel, loadAudioFile, clearModelCache, getCacheInfo } from './audio-model.js';
 
 export function initialize(filePickerType) {
 	try {
@@ -26,6 +29,19 @@ export function initialize(filePickerType) {
 		const picker = filePickerType.description == SYMBOL_FSA ? new FSAPicker : new OPFSPicker
 		document.getElementById(FOLDER_PICKER_ID).addEventListener('click', picker.selectFolder)
 		document.getElementById(FILE_PICKER_ID).addEventListener('click', picker.selectFile)
+
+		// instantiate model controls
+		let modelControlsTemplate = document.getElementById('ModelControls')
+		let modelControls = modelControlsTemplate.content.cloneNode(true)
+		document.getElementById(CONTROLS_ID).appendChild(modelControls)
+
+		// bind model control events
+		document.getElementById(CLEAR_CACHE_ID).addEventListener('click', () => {
+			console.log('yeyayyayy')
+		})
+		document.getElementById(LOAD_MODEL_ID).addEventListener('click', () => {
+			console.log('asdfasdf')
+		})
 	} catch(error) {
 		console.error(error)
 	}
