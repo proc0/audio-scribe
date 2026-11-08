@@ -1,5 +1,5 @@
 import { initialize } from './main'
-import { SYMBOL_NONE, SYMBOL_FSA, SYMBOL_OPFS, FilePickerAPI } from './const'
+import { FilePickerAPI } from './const'
 
 // check which file picker type the browser supports
 let filePickerType = FilePickerAPI.NONE

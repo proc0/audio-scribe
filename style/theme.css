@@ -27,6 +27,12 @@ menu {
     color: #888888;
 
   }
+
+  .icon-button:disabled {
+    &:hover {
+      background-color: #222222;
+    }
+  }
 }
 
 .error {

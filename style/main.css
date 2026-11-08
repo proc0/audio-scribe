@@ -60,6 +60,14 @@ menu {
       text-align: left;
     }
   }
+
+  .icon-button:disabled {
+    & label:hover {
+      cursor: not-allowed;
+    }
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 }
 
 .error {

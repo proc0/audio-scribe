@@ -16,6 +16,7 @@ export const FILE_PICKER_ID = 'file-picker'
 export const FOLDER_PICKER_ID = 'folder-picker'
 export const CLEAR_CACHE_ID = 'clear-cache'
 export const LOAD_MODEL_ID = 'load-model'
+export const INFO_ID = 'info'
 
 // HuggingFace model URL
 export const MODEL_URL = 'https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B-ONNX/resolve/main';
