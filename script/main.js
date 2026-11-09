@@ -1,4 +1,10 @@
-import { 
+import {
+  STATE_DEFAULT,
+  STATE_LOADING,
+  STATE_CLEARING,
+  STATE_READY,
+  STATE_ERROR,
+  AppState,
   SYMBOL_NONE,
   SYMBOL_FSA,
   SYMBOL_OPFS,
@@ -9,9 +15,50 @@ import {
   CLEAR_CACHE_ID,
   LOAD_MODEL_ID,
   INFO_ID,
+  MODELS,
+  DEFAULT_MODEL,
 } from './const'
-import { OPFSPicker, FSAPicker } from './picker'
-import { AudioModel, loadAudioFile, clearModelCache, getCacheInfo } from './audio-model.js';
+import { 
+  OPFSPicker, 
+  FSAPicker
+} from './picker'
+import { 
+  AudioModel,
+  loadAudioFile,
+  clearModelCache,
+  getCacheInfo 
+} from './audio-model.js';
+
+let appState = STATE_DEFAULT
+
+let audioModel = {
+  dispose: () => { console.log('DISPOSING') },
+  load: async (path, config) => {
+    for (let i = 0; i < 10; i++) {
+      const mockProg = { status: i < 9 ? 'loading' : 'done' }
+      await new Promise(resolve => setTimeout(() => { config.progressCallback(mockProg); resolve(); }, 400))
+    }
+  }
+}
+
+function updateAppState(state, message) {
+  appState = state
+
+  if (state == STATE_DEFAULT) {
+
+  } else if (state === STATE_LOADING) {
+    console.log(message);
+
+  } else if (state === STATE_CLEARING) {
+    console.log(message);
+
+  } else if (state === STATE_READY) {
+    console.log(message);
+
+  } else if (state === STATE_ERROR) {
+     console.error('Error:', message);
+  }
+}
 
 async function getCacheSize() {
   const info = await getCacheInfo()
@@ -91,7 +138,63 @@ export function initialize(filePickerType) {
     clearCacheButton.disabled = cacheSize < 1
   })
 
-  document.getElementById(LOAD_MODEL_ID).addEventListener('click', () => {
-      console.log('asdfasdf')
+  document.getElementById(LOAD_MODEL_ID).addEventListener('click', async (event) => {
+    const modelConfig = MODELS[DEFAULT_MODEL];
+
+    // setLoading(true);
+    // setReady(false);
+    // showProgress(true);
+    // updateProgress(0, 'Starting...');
+    // setStatus(`Loading ${modelConfig.label}...`);
+
+    if (audioModel) {
+      console.log('Disposing previous model...');
+      audioModel.dispose();
+      // audioModel = null;
+    }
+
+    // messages = [];
+    // pendingAudio = null;
+    // chatContainer.innerHTML = '';
+
+    try {
+      let useWebGPU = !!navigator.gpu;
+      if (!useWebGPU) {
+        console.warn('WebGPU not available, falling back to WASM (CPU)');
+      }
+
+      const device = useWebGPU ? 'webgpu' : 'wasm';
+      updateAppState(STATE_LOADING, `Loading audio model (${device})...`)
+
+      // audioModel = new AudioModel();
+      await audioModel.load(modelConfig.path, {
+        device,
+        quantization: modelConfig.quantization || null,
+        progressCallback: (progress) => {
+          if (progress.status === 'loading') {
+            console.log(progress)
+            // updateProgress(progress.progress, `Loading ${progress.file}...`);
+          } else if (progress.status === 'done') {
+            // updateProgress(100, 'Done');
+            console.log("DONE")
+            console.log(progress)
+          }
+        },
+      });
+
+      // showProgress(false);
+      updateAppState(STATE_READY, `Ready! Audio model loaded on ${device === 'webgpu' ? 'WebGPU' : 'CPU'}`)
+      // setStatus(`Ready! Audio model loaded on ${device === 'webgpu' ? 'WebGPU' : 'CPU'}`, 'success');
+      // setReady(true);
+      // updateCacheInfo();
+      // updatePlaceholder();
+
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      updateAppState(STATE_ERROR, `Error loading model: ${msg}`)
+      audioModel = null;
+    } finally {
+      // setLoading(false);
+    }
   })
 }
