@@ -118,3 +118,71 @@ main {
     border-radius: 0.64rem;
   }
 }
+
+/*
+  Tabs
+  Uses hidden radio buttons to render pure CSS tabs
+  Structure:
+  <main>
+    <input> <!-- hidden radio buttons -->
+    <input>
+       .
+       .
+    <div id="#tabs">
+        <label ...> <!-- tab labels -->
+        <label ...>
+            .
+            .
+    </div>
+    <content>
+        <section ...> <!-- tab content -->
+        <section ...>
+              .
+              .
+*/
+
+/* hide radio inputs */
+main > input {
+  position: absolute;
+  visibility: hidden;
+}
+
+/* hide tab content */
+.tab-section {
+  display: none;
+  padding: 30px 0;
+  border-top: 1px solid #ccc;
+}
+
+#tabs {
+  display: flex;
+  flex-direction: row;
+}
+
+.tab-label {
+  &:hover {
+    color: #06c;
+  }
+  display: flex;
+  padding: 1rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* selected tab content sections for radio button checked */
+main > input#tab1:checked ~ content > #tab-section1,
+main > input#tab2:checked ~ content > #tab-section2,
+main > input#tab3:checked ~ content > #tab-section3 {
+  display: block;
+}
+
+/* selected tab label */
+main > input#tab1:checked ~ #tabs > #tab-label1,
+main > input#tab2:checked ~ #tabs > #tab-label2,
+main > input#tab3:checked ~ #tabs > #tab-label3 {
+  color: #06c;
+  border-color: #ccc;
+  border-bottom: 1px solid #fff;
+  margin-bottom: -1px;
+}
