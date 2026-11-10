@@ -139,14 +139,6 @@ export class FSAPicker {
 
 export class OPFSPicker {
 
-	constructor() {
-		let folderPickerInput = document.getElementById(FOLDER_PICKER_ID).nextElementSibling
-		let filePickerInput = document.getElementById(FILE_PICKER_ID).nextElementSibling
-
-		folderPickerInput.addEventListener('change', this.selectFolder)
-		filePickerInput.addEventListener('change', this.selectFile)
-	}
-	
 	async selectFolder(event) {
 		if (event.type === 'click') {
 			event.currentTarget.nextElementSibling.click()
@@ -166,19 +158,21 @@ export class OPFSPicker {
 	}
 
 	async onClickSelectFolder(event, processAudioFiles) {
-    event.currentTarget.nextElementSibling.addEventListener('change', async (e) => {
+	 	const onFolderSelect = async (e) => {
       await processAudioFiles(e.target.files)
-      e.currentTarget.removeEventListener('change')
-    })
+      e.target.removeEventListener('change', onFolderSelect)
+    }
+    event.currentTarget.nextElementSibling.addEventListener('change', onFolderSelect)
 
     await this.selectFolder(event)
   }
 
  	async onClickSelectFile(event, processAudioFiles) {
-    event.currentTarget.nextElementSibling.addEventListener('change', async (e) => {
+ 		const onFileSelect = async (e) => {
       await processAudioFiles(e.target.files)
-      e.currentTarget.removeEventListener('change')
-    })
+      e.target.removeEventListener('change', onFileSelect)
+    }
+    event.currentTarget.nextElementSibling.addEventListener('change', onFileSelect)
 
     await this.selectFile(event)
   }
