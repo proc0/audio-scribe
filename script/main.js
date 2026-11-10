@@ -17,6 +17,8 @@ import {
   LOAD_MODEL_ID,
   ID_INFO_DETAILS,
   ID_TAB_CONTENTS,
+  ID_CONFIRM_TRANSCRIBE,
+  ID_SAVE,
   MODELS,
   DEFAULT_MODEL,
 } from './const'
@@ -32,16 +34,18 @@ import {
 } from './audio-model.js';
 
 let appState = STATE_DEFAULT
+let transcribeFiles = []
 
-let audioModel = {
-  dispose: () => { console.log('DISPOSING') },
-  load: async (path, config) => {
-    for (let i = 0; i < 10; i++) {
-      const mockProg = { status: i < 9 ? 'loading' : 'done' }
-      await new Promise(resolve => setTimeout(() => { config.progressCallback(mockProg); resolve(); }, 400))
-    }
-  }
-}
+let audioModel = null
+// let audioModel = {
+//   dispose: () => { console.log('DISPOSING') },
+//   load: async (path, config) => {
+//     for (let i = 0; i < 10; i++) {
+//       const mockProg = { status: i < 9 ? 'loading' : 'done' }
+//       await new Promise(resolve => setTimeout(() => { config.progressCallback(mockProg); resolve(); }, 400))
+//     }
+//   }
+// }
 
 export function updateAppState(state, message) {
   appState = state
@@ -114,10 +118,12 @@ export function initialize(filePickerType) {
       const audioPreviews = document.createElement('ul')
 
       for (const audioFile of audioFiles) {
-        const { audioData, sampleRate } = await loadAudioFile(audioFile);
+        const transcribeFile = await loadAudioFile(audioFile);
         const audioPreview = document.createElement('li')
-        audioPreview.textContent = `${audioFile.name} - ${audioData.length} - ${sampleRate}`
+        audioPreview.textContent = `${audioFile.name} - ${transcribeFile.audioData.length} - ${transcribeFile.sampleRate}`
         audioPreviews.appendChild(audioPreview)
+
+        transcribeFiles.push(transcribeFile)
       }
       document.getElementById(ID_TAB_CONTENTS).appendChild(audioPreviews)
     })
@@ -129,10 +135,12 @@ export function initialize(filePickerType) {
       const audioPreviews = document.createElement('ul')
 
       for (const audioFile of audioFiles) {
-        const { audioData, sampleRate } = await loadAudioFile(audioFile);
+        const transcribeFile = await loadAudioFile(audioFile);
         const audioPreview = document.createElement('li')
-        audioPreview.textContent = `${audioFile.name} - ${audioData.length} - ${sampleRate}`
+        audioPreview.textContent = `${audioFile.name} - ${transcribeFile.audioData.length} - ${transcribeFile.sampleRate}`
         audioPreviews.appendChild(audioPreview)
+
+        transcribeFiles.push(transcribeFile)
       }
 
       document.getElementById(ID_TAB_CONTENTS).appendChild(audioPreviews)
@@ -160,13 +168,12 @@ export function initialize(filePickerType) {
 
     // clear cache and update info texts plus button status
     const infoDetails = document.getElementById(ID_INFO_DETAILS)
-    infoDetails.querySelector('label').textContent = 'Deleting cache...'
-    infoDetails.open = true
+    updateAppState(STATE_CLEARING, 'Deleting cache...')
 
     await clearModelCache();
 
     const newSize = await getCacheSize()
-    infoDetails.querySelector('label').textContent = getCacheSizeText(newSize)
+    updateAppState(STATE_CLEARING, getCacheSizeText(newSize))
     event.currentTarget.disabled = newSize < 1
   })
 
@@ -203,7 +210,7 @@ export function initialize(filePickerType) {
       const device = useWebGPU ? 'webgpu' : 'wasm';
       updateAppState(STATE_LOADING, `Loading audio model (${device})...`)
 
-      // audioModel = new AudioModel();
+      audioModel = new AudioModel();
       await audioModel.load(modelConfig.path, {
         device,
         quantization: modelConfig.quantization || null,
@@ -233,5 +240,29 @@ export function initialize(filePickerType) {
     } finally {
       // setLoading(false);
     }
+  })
+
+  document.getElementById(ID_CONFIRM_TRANSCRIBE).addEventListener('click', async (event) => {
+    let generatedText = ''
+    let tokenCount = 0
+    const onTokenCallback = (token, tokenId) => {
+      if (token.includes('<|im_end|>') || token.includes('<|endoftext|>')) {
+        return true;
+      }
+      generatedText += token;
+      tokenCount++;
+      // const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+      // updateSpinner(null, `${tokenCount} tokens · ${elapsed}s`);
+      return false;
+    };
+
+    let audioToSend = transcribeFiles[0]
+    const finalText = await audioModel.transcribe(
+      audioToSend.audioData,
+      audioToSend.sampleRate,
+      { onToken: onTokenCallback }
+    );
+
+    console.log(generatedText, finalText)
   })
 }

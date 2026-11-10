@@ -113,6 +113,7 @@ main {
   flex-grow: 1;
   margin-bottom: 2rem;
   content {
+    display: flex;
     height: 100%;
     min-height: 5rem;
     border-radius: 0 0 0.64rem 0.64rem;
@@ -147,9 +148,15 @@ main > input {
   visibility: hidden;
 }
 
-/* hide tab content */
 .tab-contents {
+  display: flex;
+}
+
+/* hide tab content */
+.tab-content {
   display: none;
+  flex-direction: column;
+  width: 100%;
   padding: 2rem;
 }
 
@@ -186,7 +193,7 @@ main > input {
 /* selected tab content sections for radio button checked */
 main > input#tab0:checked ~ content > #tab-content0,
 main > input#tab1:checked ~ content > #tab-content1 {
-  display: block;
+  display: flex;
 }
 
 /* selected tab label */
@@ -196,4 +203,14 @@ main > input#tab1:checked ~ #tab-labels > #tab-label1 {
   background-color: #1a1a1a;
   box-shadow: inset 0px 8px 12px #111;
   border-radius: 0.64rem 0.64rem 0 0;
+}
+
+.tab-body {
+  display: flex;
+  flex-grow: 1;
+}
+
+.tab-footer {
+  display: flex;
+  justify-content: flex-end;
 }

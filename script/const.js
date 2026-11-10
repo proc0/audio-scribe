@@ -56,3 +56,5 @@ export const LOAD_MODEL_ID = 'load-model'
 export const ID_INFO_DETAILS = 'info'
 
 export const ID_TAB_CONTENTS = 'tab-contents'
+export const ID_CONFIRM_TRANSCRIBE = 'confirm-transcribe'
+export const ID_SAVE = 'save'

@@ -9,7 +9,7 @@ import {
 } from './const'
 import { initialize, updateAppState } from './main'
 
-// Check WebGPU on load
+// check WebGPU availability
 (async () => {
   if (!navigator.gpu) {
     updateAppState(STATE_CHECKING, 'WebGPU not available - will use CPU (WASM). For GPU acceleration, enable chrome://flags/#enable-unsafe-webgpu');
