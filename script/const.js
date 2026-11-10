@@ -20,6 +20,7 @@ export const DEFAULT_MODEL = 'LFM2.5-Audio-1.5B-Q4'
 
 // matches index.html template ids
 export const STATE_DEFAULT = 'Default'
+export const STATE_CHECKING = 'Checking'
 export const STATE_LOADING = 'Loading'
 export const STATE_CLEARING = 'Clearing'
 export const STATE_READY = 'Ready'
@@ -27,6 +28,7 @@ export const STATE_ERROR = 'Error'
 
 export const AppState = Object.freeze({
   DEFAULT: Symbol(STATE_DEFAULT),
+  CHECKING: Symbol(STATE_CHECKING),
   LOADING: Symbol(STATE_LOADING),
   CLEARING: Symbol(STATE_CLEARING),
   READY: Symbol(STATE_READY),
@@ -51,6 +53,6 @@ export const FILE_PICKER_ID = 'file-picker'
 export const FOLDER_PICKER_ID = 'folder-picker'
 export const CLEAR_CACHE_ID = 'clear-cache'
 export const LOAD_MODEL_ID = 'load-model'
-export const INFO_ID = 'info'
+export const ID_INFO_DETAILS = 'info'
 
 export const ID_TAB_CONTENTS = 'tab-contents'

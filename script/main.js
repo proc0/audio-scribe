@@ -1,5 +1,6 @@
 import {
   STATE_DEFAULT,
+  STATE_CHECKING,
   STATE_LOADING,
   STATE_CLEARING,
   STATE_READY,
@@ -14,7 +15,7 @@ import {
   FOLDER_PICKER_ID,
   CLEAR_CACHE_ID,
   LOAD_MODEL_ID,
-  INFO_ID,
+  ID_INFO_DETAILS,
   ID_TAB_CONTENTS,
   MODELS,
   DEFAULT_MODEL,
@@ -42,13 +43,20 @@ let audioModel = {
   }
 }
 
-function updateAppState(state, message) {
+export function updateAppState(state, message) {
   appState = state
 
   if (state == STATE_DEFAULT) {
 
   } else if (state === STATE_LOADING) {
     console.log(message);
+
+  } else if (state === STATE_CHECKING) {
+    console.log(message);
+    // TODO: abstract to its own updateInfo function
+    const infoDetails = document.getElementById(ID_INFO_DETAILS)
+    infoDetails.querySelector('blockquote').textContent = message
+    infoDetails.open = true
 
   } else if (state === STATE_CLEARING) {
     console.log(message);
@@ -102,7 +110,7 @@ export function initialize(filePickerType) {
   const picker = filePickerType.description == SYMBOL_FSA ? new FSAPicker : new OPFSPicker
   document.getElementById(FOLDER_PICKER_ID).addEventListener('click', async (event) => {
     await picker.onClickSelectFolder(event, async (audioFiles) => {
-      
+
       const audioPreviews = document.createElement('ul')
 
       for (const audioFile of audioFiles) {
@@ -151,7 +159,7 @@ export function initialize(filePickerType) {
     if (!confirmed) return;
 
     // clear cache and update info texts plus button status
-    const infoDetails = document.getElementById(INFO_ID)
+    const infoDetails = document.getElementById(ID_INFO_DETAILS)
     infoDetails.querySelector('label').textContent = 'Deleting cache...'
     infoDetails.open = true
 
