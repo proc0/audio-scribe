@@ -70,13 +70,11 @@ export class FSAPicker {
 		const files = await traverse(rootDir, '', [])
 		const audioFiles = files
 			.filter((file) => isAudioFile(file.name))
-			.map((file) => new AudioFile(file))
 
-    console.log(audioFiles)
-    // return results;
+    return audioFiles;
 	}
 	
-	async selectFolderSync() {
+	async selectFolderSync(processAudioFile) {
     let rootDir;
     try {
       rootDir = await window.showDirectoryPicker({ mode: 'read' });
@@ -88,7 +86,7 @@ export class FSAPicker {
 		for await (const file of traverseSync(rootDir, '')) {
 	    if (isAudioFile(file.name)) {
 	      const audioFile = new AudioFile(file)
-		  	console.log(audioFile);
+		  	processAudioFile(audioFile);
 	    }
 		}
 	}
@@ -107,16 +105,36 @@ export class FSAPicker {
 			  multiple: true,
 			};
 
-	    let fileList = [];
+	    let audioFiles = []
 	    try {
-	      fileList = await window.showOpenFilePicker(options);
+	      const fileHandles = await window.showOpenFilePicker(options);
+
+	      for (const fileHandle of fileHandles) {
+	      	if (isAudioFile(fileHandle.name)) {
+	      		const audioFile = await fileHandle.getFile()
+	      		audioFiles.push(audioFile)
+	      	}
+	      }
+
 	    } catch (error) {
 	      if (error.name === 'AbortError') return [];
 	      throw error;
 	    }
-
-	    console.log(fileList)
+	    
+	    return audioFiles
 	}
+
+	async onClickSelectFolder(event, processAudioFiles) {
+    const audioFiles = await this.selectFolder(event)
+
+    return processAudioFiles(audioFiles)
+  }
+
+ 	async onClickSelectFile(event, processAudioFiles) {
+    const audioFiles = await this.selectFile(event)
+
+    return processAudioFiles(audioFiles)
+  }
 }
 
 export class OPFSPicker {
@@ -129,21 +147,39 @@ export class OPFSPicker {
 		filePickerInput.addEventListener('change', this.selectFile)
 	}
 	
-	selectFolder(event) {
+	async selectFolder(event) {
 		if (event.type === 'click') {
-			this.nextElementSibling.click()
+			event.currentTarget.nextElementSibling.click()
 			return;
 		}
 
-		console.log(event.target.files)
+		return event.target.files
 	}
 
-	selectFile(event) {
+	async selectFile(event) {
 		if (event.type === 'click') {
-			this.nextElementSibling.click()
+			event.currentTarget.nextElementSibling.click()
 			return;
 		}
 
-		console.log(event.target.files)
+		return event.target.files
 	}
+
+	async onClickSelectFolder(event, processAudioFiles) {
+    event.currentTarget.nextElementSibling.addEventListener('change', async (e) => {
+      await processAudioFiles(e.target.files)
+      e.currentTarget.removeEventListener('change')
+    })
+
+    await this.selectFolder(event)
+  }
+
+ 	async onClickSelectFile(event, processAudioFiles) {
+    event.currentTarget.nextElementSibling.addEventListener('change', async (e) => {
+      await processAudioFiles(e.target.files)
+      e.currentTarget.removeEventListener('change')
+    })
+
+    await this.selectFile(event)
+  }
 }

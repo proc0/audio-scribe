@@ -115,7 +115,7 @@ main {
   content {
     height: 100%;
     min-height: 5rem;
-    border-radius: 0.64rem;
+    border-radius: 0 0 0.64rem 0.64rem;
   }
 }
 
@@ -128,7 +128,7 @@ main {
     <input>
        .
        .
-    <div id="#tabs">
+    <div id="#tab-labels">
         <label ...> <!-- tab labels -->
         <label ...>
             .
@@ -148,41 +148,52 @@ main > input {
 }
 
 /* hide tab content */
-.tab-section {
+.tab-contents {
   display: none;
-  padding: 30px 0;
-  border-top: 1px solid #ccc;
+  padding: 2rem;
 }
 
-#tabs {
+#tab-labels {
   display: flex;
+  width: 100%;
   flex-direction: row;
 }
 
 .tab-label {
   &:hover {
-    color: #06c;
+    color: #ccc;
   }
   display: flex;
+  flex-grow: 1;
+  justify-content: center;
   padding: 1rem;
   border: 1px solid transparent;
   cursor: pointer;
+  font-size: 1rem;
   font-weight: 600;
+  color: #555;
+  z-index: 2;
+}
+
+#tab-label0 {
+  box-shadow: 12px 12px 12px #111;
+}
+
+#tab-label1 {
+  box-shadow: -12px 12px 12px #111;
 }
 
 /* selected tab content sections for radio button checked */
-main > input#tab1:checked ~ content > #tab-section1,
-main > input#tab2:checked ~ content > #tab-section2,
-main > input#tab3:checked ~ content > #tab-section3 {
+main > input#tab0:checked ~ content > #tab-content0,
+main > input#tab1:checked ~ content > #tab-content1 {
   display: block;
 }
 
 /* selected tab label */
-main > input#tab1:checked ~ #tabs > #tab-label1,
-main > input#tab2:checked ~ #tabs > #tab-label2,
-main > input#tab3:checked ~ #tabs > #tab-label3 {
-  color: #06c;
-  border-color: #ccc;
-  border-bottom: 1px solid #fff;
-  margin-bottom: -1px;
+main > input#tab0:checked ~ #tab-labels > #tab-label0,
+main > input#tab1:checked ~ #tab-labels > #tab-label1 {
+  color: #ccc;
+  background-color: #1a1a1a;
+  box-shadow: inset 0px 8px 12px #111;
+  border-radius: 0.64rem 0.64rem 0 0;
 }

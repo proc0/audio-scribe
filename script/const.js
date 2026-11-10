@@ -53,3 +53,4 @@ export const CLEAR_CACHE_ID = 'clear-cache'
 export const LOAD_MODEL_ID = 'load-model'
 export const INFO_ID = 'info'
 
+export const ID_TAB_CONTENTS = 'tab-contents'

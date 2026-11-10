@@ -10,7 +10,6 @@ menu {
   .icon-button {
     color: #dddddd;
     background-color: #222222;
-    border: 1px solid #444444;
     box-shadow: 2px 2px 14px #111;
   }
 
@@ -24,7 +23,9 @@ menu {
   }
 
   .icon-button:disabled {
+    opacity: 0.5;
     &:hover {
+      opacity: 0.6;
       background-color: #222222;
     }
   }
@@ -37,6 +38,6 @@ menu {
 main {
   content {
     background-color: #1a1a1a;
-    box-shadow: inset 0px -2px 16px #111;
+    box-shadow: inset 0px -8px 12px #111;
   }
 }

@@ -15,6 +15,7 @@ import {
   CLEAR_CACHE_ID,
   LOAD_MODEL_ID,
   INFO_ID,
+  ID_TAB_CONTENTS,
   MODELS,
   DEFAULT_MODEL,
 } from './const'
@@ -99,8 +100,36 @@ export function initialize(filePickerType) {
 
   // instatiate appropriate file picker and bind button events
   const picker = filePickerType.description == SYMBOL_FSA ? new FSAPicker : new OPFSPicker
-  document.getElementById(FOLDER_PICKER_ID).addEventListener('click', picker.selectFolder)
-  document.getElementById(FILE_PICKER_ID).addEventListener('click', picker.selectFile)
+  document.getElementById(FOLDER_PICKER_ID).addEventListener('click', async (event) => {
+    await picker.onClickSelectFolder(event, async (audioFiles) => {
+      
+      const audioPreviews = document.createElement('ul')
+
+      for (const audioFile of audioFiles) {
+        const { audioData, sampleRate } = await loadAudioFile(audioFile);
+        const audioPreview = document.createElement('li')
+        audioPreview.textContent = `${audioFile.name} - ${audioData.length} - ${sampleRate}`
+        audioPreviews.appendChild(audioPreview)
+      }
+      document.getElementById(ID_TAB_CONTENTS).appendChild(audioPreviews)
+    })
+  })
+
+  document.getElementById(FILE_PICKER_ID).addEventListener('click', async (event) => {
+    await picker.onClickSelectFile(event, async (audioFiles) => {
+
+      const audioPreviews = document.createElement('ul')
+
+      for (const audioFile of audioFiles) {
+        const { audioData, sampleRate } = await loadAudioFile(audioFile);
+        const audioPreview = document.createElement('li')
+        audioPreview.textContent = `${audioFile.name} - ${audioData.length} - ${sampleRate}`
+        audioPreviews.appendChild(audioPreview)
+      }
+
+      document.getElementById(ID_TAB_CONTENTS).appendChild(audioPreviews)
+    })
+  })
 
   // instantiate model controls
   let modelControlsTemplate = document.getElementById('ModelControls')
