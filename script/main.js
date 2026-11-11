@@ -25,16 +25,16 @@ import {
 let appState = STATE_DEFAULT
 let transcribeFiles = []
 
-// let audioModel = null
-let audioModel = {
-  dispose: () => { console.log('DISPOSING') },
-  load: async (path, config) => {
-    for (let i = 0; i < 10; i++) {
-      const mockProg = { file: `file_${i}`, status: i < 9 ? 'loading' : 'done', progress: i*10 }
-      await new Promise(resolve => setTimeout(() => { config.progressCallback(mockProg); resolve(); }, 400))
-    }
-  }
-}
+let audioModel = null
+// let audioModel = {
+//   dispose: () => { console.log('DISPOSING') },
+//   load: async (path, config) => {
+//     for (let i = 0; i < 10; i++) {
+//       const mockProg = { file: `file_${i}`, status: i < 9 ? 'loading' : 'done', progress: i*10 }
+//       await new Promise(resolve => setTimeout(() => { config.progressCallback(mockProg); resolve(); }, 400))
+//     }
+//   }
+// }
 
 export function updateAppState(state, message, memo) {
   let lastState = appState
@@ -43,7 +43,13 @@ export function updateAppState(state, message, memo) {
   const infoDetails = document.getElementById('info')
   const infoBody = infoDetails.querySelector('blockquote')
 
-  console.log(message);
+  if (state === STATE_ERROR) {
+    console.error(message);
+  } else {
+    console.log(message);
+  }
+
+  infoBody.textContent = message
 
   if (state == STATE_DEFAULT) {
 
@@ -65,20 +71,13 @@ export function updateAppState(state, message, memo) {
       }, 1000)
     }
 
-    infoBody.textContent = message
-
   } else if (state === STATE_CHECKING) {
     infoDetails.open = true
-    infoBody.textContent = message
 
   } else if (state === STATE_CLEARING) {
-    infoBody.textContent = message
+    infoDetails.open = true
 
   } else if (state === STATE_READY) {
-    infoBody.textContent = message
-
-  } else if (state === STATE_ERROR) {
-    infoBody.textContent = message
 
   }
 }
@@ -105,24 +104,12 @@ function getCacheSizeText(usedMB) {
 export function initialize(filePickerType) {
 
   const controls = document.getElementById('controls')
-  // check requirements before proceeding
-  try {
-    // instantiate picker template depending on type
-    let filePickerTemplate = document.getElementById(filePickerType.description)
-    let filePicker = filePickerTemplate.content.cloneNode(true)
-    controls.appendChild(filePicker)
+  // instantiate folder and file picker template
+  let filePickerTemplate = document.getElementById(filePickerType.description)
+  let filePickerElement = filePickerTemplate.content.cloneNode(true)
+  controls.appendChild(filePickerElement)
 
-    // abort if no available file picker in browser
-    if (filePickerType.description == PICKER_NONE) {
-        let errorMessage = document.querySelector('#controls .error').textContent
-        throw new Error(errorMessage)
-    }
-  } catch(error) {
-    console.error(error)
-    return
-  }
-
-  // instatiate appropriate file picker and bind button events
+  // initialize appropriate file picker and bind events
   const picker = filePickerType.description == PICKER_FSA ? new FSAPicker : new OPFSPicker
   document.getElementById('folder-picker').addEventListener('click', async (event) => {
     await picker.onClickSelectFolder(event, async (audioFiles) => {
@@ -139,6 +126,7 @@ export function initialize(filePickerType) {
 
         transcribeFiles.push(transcribeFile)
       }
+
       document.querySelector('#tab-content0 .tab-body').appendChild(audioPreviews)
     })
   })
@@ -208,13 +196,13 @@ export function initialize(filePickerType) {
     try {
       let useWebGPU = !!navigator.gpu;
       if (!useWebGPU) {
-        console.warn('WebGPU not available, falling back to WASM (CPU)');
+        updateAppState(STATE_CHECKING, 'WebGPU not available, falling back to WASM (CPU)');
       }
 
       const device = useWebGPU ? 'webgpu' : 'wasm';
       updateAppState(STATE_LOADING, `Loading audio model (${device})...`)
 
-      // audioModel = new AudioModel();
+      audioModel = new AudioModel();
       await audioModel.load(modelConfig.path, {
         device,
         quantization: modelConfig.quantization || null,
@@ -223,7 +211,7 @@ export function initialize(filePickerType) {
         },
       });
 
-      updateAppState(STATE_READY, `Ready! Audio model loaded on ${device === 'webgpu' ? 'WebGPU' : 'CPU'}`)
+      updateAppState(STATE_READY, `Audio model loaded on ${device === 'webgpu' ? 'WebGPU' : 'CPU'}`)
     } catch (error) {
       const msg = error instanceof Error ? error.message : String(error);
       updateAppState(STATE_ERROR, `Error loading model: ${msg}`)
@@ -232,14 +220,17 @@ export function initialize(filePickerType) {
   })
 
   document.getElementById('confirm-transcribe').addEventListener('click', async (event) => {
-    let generatedText = ''
-    let tokenCount = 0
+    // let generatedText = ''
+    // let tokenCount = 0
+
     const onTokenCallback = (token, tokenId) => {
       if (token.includes('<|im_end|>') || token.includes('<|endoftext|>')) {
         return true;
       }
-      generatedText += token;
-      tokenCount++;
+
+      document.querySelector('#tab-content1 .tab-body').textContent = token
+      // generatedText += token;
+      // tokenCount++;
       // const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
       // updateSpinner(null, `${tokenCount} tokens · ${elapsed}s`);
       return false;
@@ -252,6 +243,6 @@ export function initialize(filePickerType) {
       { onToken: onTokenCallback }
     );
 
-    console.log(generatedText, finalText)
+    console.log(finalText)
   })
 }
