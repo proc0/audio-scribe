@@ -31,7 +31,7 @@ h1 {
 main, menu {
   width: 68%;
   align-items: left;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 header {
@@ -111,7 +111,7 @@ menu {
 main {
   color: #bbb;
   flex-grow: 1;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   content {
     display: flex;
     height: 100%;
@@ -120,21 +120,26 @@ main {
   }
 }
 
+progress {
+  width: 100%;
+  height: 0.5rem;
+  margin-bottom: 1rem;
+  visibility: hidden;
+}
+
 /*
   Tabs
   Uses hidden radio buttons to render pure CSS tabs
-  Structure:
   <main>
     <input> <!-- hidden radio buttons -->
     <input>
        .
        .
     <div id="#tab-labels">
-        <label ...> <!-- tab labels -->
+        <label ...> <!-- tabs -->
         <label ...>
             .
             .
-    </div>
     <content>
         <section ...> <!-- tab content -->
         <section ...>

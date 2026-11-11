@@ -1,8 +1,3 @@
-import { 
-	FILE_PICKER_ID,
-	FOLDER_PICKER_ID 
-} from './const'
-
 const AUDIO_EXTENSIONS = [
   '.wav', '.mp3', '.ogg', '.flac', '.m4a', '.aac',
   '.aiff', '.aif', '.wma', '.opus',

@@ -6,19 +6,8 @@ import {
   STATE_READY,
   STATE_ERROR,
   AppState,
-  SYMBOL_NONE,
-  SYMBOL_FSA,
-  SYMBOL_OPFS,
-  CONTROLS_ID,
-  ERROR_LABEL,
-  FILE_PICKER_ID,
-  FOLDER_PICKER_ID,
-  CLEAR_CACHE_ID,
-  LOAD_MODEL_ID,
-  ID_INFO_DETAILS,
-  ID_TAB_CONTENTS,
-  ID_CONFIRM_TRANSCRIBE,
-  ID_SAVE,
+  PICKER_NONE,
+  PICKER_FSA,
   MODELS,
   DEFAULT_MODEL,
 } from './const'
@@ -36,40 +25,61 @@ import {
 let appState = STATE_DEFAULT
 let transcribeFiles = []
 
-let audioModel = null
-// let audioModel = {
-//   dispose: () => { console.log('DISPOSING') },
-//   load: async (path, config) => {
-//     for (let i = 0; i < 10; i++) {
-//       const mockProg = { status: i < 9 ? 'loading' : 'done' }
-//       await new Promise(resolve => setTimeout(() => { config.progressCallback(mockProg); resolve(); }, 400))
-//     }
-//   }
-// }
+// let audioModel = null
+let audioModel = {
+  dispose: () => { console.log('DISPOSING') },
+  load: async (path, config) => {
+    for (let i = 0; i < 10; i++) {
+      const mockProg = { file: `file_${i}`, status: i < 9 ? 'loading' : 'done', progress: i*10 }
+      await new Promise(resolve => setTimeout(() => { config.progressCallback(mockProg); resolve(); }, 400))
+    }
+  }
+}
 
-export function updateAppState(state, message) {
+export function updateAppState(state, message, memo) {
+  let lastState = appState
   appState = state
+
+  const infoDetails = document.getElementById('info')
+  const infoBody = infoDetails.querySelector('blockquote')
+
+  console.log(message);
 
   if (state == STATE_DEFAULT) {
 
   } else if (state === STATE_LOADING) {
-    console.log(message);
+    const loadingBar = document.getElementById('loading-bar')
+
+    if (lastState != appState) {
+      loadingBar.value = 0
+      loadingBar.setAttribute('style', 'visibility: visible')
+      infoDetails.open = true
+    }
+
+    if (memo?.status === 'loading') {      
+      loadingBar.value = memo.progress
+    } else if (memo?.status === 'done') {
+      loadingBar.value = 100
+      setTimeout(() => { 
+        loadingBar.removeAttribute('style')
+      }, 1000)
+    }
+
+    infoBody.textContent = message
 
   } else if (state === STATE_CHECKING) {
-    console.log(message);
-    // TODO: abstract to its own updateInfo function
-    const infoDetails = document.getElementById(ID_INFO_DETAILS)
-    infoDetails.querySelector('blockquote').textContent = message
     infoDetails.open = true
+    infoBody.textContent = message
 
   } else if (state === STATE_CLEARING) {
-    console.log(message);
+    infoBody.textContent = message
 
   } else if (state === STATE_READY) {
-    console.log(message);
+    infoBody.textContent = message
 
   } else if (state === STATE_ERROR) {
-     console.error('Error:', message);
+    infoBody.textContent = message
+
   }
 }
 
@@ -93,16 +103,18 @@ function getCacheSizeText(usedMB) {
 }
 
 export function initialize(filePickerType) {
+
+  const controls = document.getElementById('controls')
   // check requirements before proceeding
   try {
     // instantiate picker template depending on type
     let filePickerTemplate = document.getElementById(filePickerType.description)
     let filePicker = filePickerTemplate.content.cloneNode(true)
-    document.getElementById(CONTROLS_ID).appendChild(filePicker)
+    controls.appendChild(filePicker)
 
     // abort if no available file picker in browser
-    if (filePickerType.description == SYMBOL_NONE) {
-        let errorMessage = document.querySelector(ERROR_LABEL).textContent
+    if (filePickerType.description == PICKER_NONE) {
+        let errorMessage = document.querySelector('#controls .error').textContent
         throw new Error(errorMessage)
     }
   } catch(error) {
@@ -111,48 +123,52 @@ export function initialize(filePickerType) {
   }
 
   // instatiate appropriate file picker and bind button events
-  const picker = filePickerType.description == SYMBOL_FSA ? new FSAPicker : new OPFSPicker
-  document.getElementById(FOLDER_PICKER_ID).addEventListener('click', async (event) => {
+  const picker = filePickerType.description == PICKER_FSA ? new FSAPicker : new OPFSPicker
+  document.getElementById('folder-picker').addEventListener('click', async (event) => {
     await picker.onClickSelectFolder(event, async (audioFiles) => {
 
       const audioPreviews = document.createElement('ul')
 
       for (const audioFile of audioFiles) {
         const transcribeFile = await loadAudioFile(audioFile);
+        
         const audioPreview = document.createElement('li')
+        
         audioPreview.textContent = `${audioFile.name} - ${transcribeFile.audioData.length} - ${transcribeFile.sampleRate}`
         audioPreviews.appendChild(audioPreview)
 
         transcribeFiles.push(transcribeFile)
       }
-      document.getElementById(ID_TAB_CONTENTS).appendChild(audioPreviews)
+      document.querySelector('#tab-content0 .tab-body').appendChild(audioPreviews)
     })
   })
 
-  document.getElementById(FILE_PICKER_ID).addEventListener('click', async (event) => {
+  document.getElementById('file-picker').addEventListener('click', async (event) => {
     await picker.onClickSelectFile(event, async (audioFiles) => {
 
       const audioPreviews = document.createElement('ul')
 
       for (const audioFile of audioFiles) {
         const transcribeFile = await loadAudioFile(audioFile);
+
         const audioPreview = document.createElement('li')
+        
         audioPreview.textContent = `${audioFile.name} - ${transcribeFile.audioData.length} - ${transcribeFile.sampleRate}`
         audioPreviews.appendChild(audioPreview)
 
         transcribeFiles.push(transcribeFile)
       }
 
-      document.getElementById(ID_TAB_CONTENTS).appendChild(audioPreviews)
+      document.querySelector('#tab-content0 .tab-body').appendChild(audioPreviews)
     })
   })
 
   // instantiate model controls
   let modelControlsTemplate = document.getElementById('ModelControls')
   let modelControls = modelControlsTemplate.content.cloneNode(true)
-  document.getElementById(CONTROLS_ID).appendChild(modelControls)
+  controls.appendChild(modelControls)
 
-  const clearCacheButton = document.getElementById(CLEAR_CACHE_ID)
+  const clearCacheButton = document.getElementById('clear-cache')
   clearCacheButton.addEventListener('click', async (event) => {
     if (event.currentTarget.disabled) return
 
@@ -166,8 +182,6 @@ export function initialize(filePickerType) {
 
     if (!confirmed) return;
 
-    // clear cache and update info texts plus button status
-    const infoDetails = document.getElementById(ID_INFO_DETAILS)
     updateAppState(STATE_CLEARING, 'Deleting cache...')
 
     await clearModelCache();
@@ -182,24 +196,14 @@ export function initialize(filePickerType) {
     clearCacheButton.disabled = cacheSize < 1
   })
 
-  document.getElementById(LOAD_MODEL_ID).addEventListener('click', async (event) => {
+  document.getElementById('load-model').addEventListener('click', async (event) => {
     const modelConfig = MODELS[DEFAULT_MODEL];
 
-    // setLoading(true);
-    // setReady(false);
-    // showProgress(true);
-    // updateProgress(0, 'Starting...');
-    // setStatus(`Loading ${modelConfig.label}...`);
-
     if (audioModel) {
-      console.log('Disposing previous model...');
+      updateAppState(STATE_CLEARING, 'Disposing previous model...');
       audioModel.dispose();
       // audioModel = null;
     }
-
-    // messages = [];
-    // pendingAudio = null;
-    // chatContainer.innerHTML = '';
 
     try {
       let useWebGPU = !!navigator.gpu;
@@ -210,39 +214,24 @@ export function initialize(filePickerType) {
       const device = useWebGPU ? 'webgpu' : 'wasm';
       updateAppState(STATE_LOADING, `Loading audio model (${device})...`)
 
-      audioModel = new AudioModel();
+      // audioModel = new AudioModel();
       await audioModel.load(modelConfig.path, {
         device,
         quantization: modelConfig.quantization || null,
-        progressCallback: (progress) => {
-          if (progress.status === 'loading') {
-            console.log(progress)
-            // updateProgress(progress.progress, `Loading ${progress.file}...`);
-          } else if (progress.status === 'done') {
-            // updateProgress(100, 'Done');
-            console.log("DONE")
-            console.log(progress)
-          }
+        progressCallback: ({ file, progress, status }) => {
+          updateAppState(STATE_LOADING, `Loading ${file}...`, { progress, status })
         },
       });
 
-      // showProgress(false);
       updateAppState(STATE_READY, `Ready! Audio model loaded on ${device === 'webgpu' ? 'WebGPU' : 'CPU'}`)
-      // setStatus(`Ready! Audio model loaded on ${device === 'webgpu' ? 'WebGPU' : 'CPU'}`, 'success');
-      // setReady(true);
-      // updateCacheInfo();
-      // updatePlaceholder();
-
     } catch (error) {
       const msg = error instanceof Error ? error.message : String(error);
       updateAppState(STATE_ERROR, `Error loading model: ${msg}`)
       audioModel = null;
-    } finally {
-      // setLoading(false);
     }
   })
 
-  document.getElementById(ID_CONFIRM_TRANSCRIBE).addEventListener('click', async (event) => {
+  document.getElementById('confirm-transcribe').addEventListener('click', async (event) => {
     let generatedText = ''
     let tokenCount = 0
     const onTokenCallback = (token, tokenId) => {

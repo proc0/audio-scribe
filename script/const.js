@@ -18,7 +18,7 @@ export const MODELS = {
 
 export const DEFAULT_MODEL = 'LFM2.5-Audio-1.5B-Q4'
 
-// matches index.html template ids
+// App States
 export const STATE_DEFAULT = 'Default'
 export const STATE_CHECKING = 'Checking'
 export const STATE_LOADING = 'Loading'
@@ -36,25 +36,12 @@ export const AppState = Object.freeze({
 });
 
 // matches index.html template ids
-export const SYMBOL_NONE = 'None'
-export const SYMBOL_FSA = 'FileSystemAccess'
-export const SYMBOL_OPFS = 'OriginPrivateFileSystem'
+export const PICKER_NONE = 'None'
+export const PICKER_FSA = 'FileSystemAccess'
+export const PICKER_OPFS = 'OriginPrivateFileSystem'
 
 export const FilePickerAPI = Object.freeze({
-  NONE: Symbol(SYMBOL_NONE),
-  FSA: Symbol(SYMBOL_FSA),
-  OPFS: Symbol(SYMBOL_OPFS),
+  NONE: Symbol(PICKER_NONE),
+  FSA: Symbol(PICKER_FSA),
+  OPFS: Symbol(PICKER_OPFS),
 });
-
-// matches index.html element ids
-export const CONTROLS_ID = 'controls'
-export const ERROR_LABEL = `#${CONTROLS_ID} .error`
-export const FILE_PICKER_ID = 'file-picker'
-export const FOLDER_PICKER_ID = 'folder-picker'
-export const CLEAR_CACHE_ID = 'clear-cache'
-export const LOAD_MODEL_ID = 'load-model'
-export const ID_INFO_DETAILS = 'info'
-
-export const ID_TAB_CONTENTS = 'tab-contents'
-export const ID_CONFIRM_TRANSCRIBE = 'confirm-transcribe'
-export const ID_SAVE = 'save'
