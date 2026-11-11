@@ -20,14 +20,6 @@ body, header {
   width: 100%;
 }
 
-h1 {
-  display: flex;
-  font-size: 1.5rem;
-  margin-top: 0;
-  margin-left: 2rem;
-  padding: 0;
-}
-
 main, menu {
   width: 68%;
   align-items: left;
@@ -39,15 +31,37 @@ header {
   flex-direction: row;
   align-items: top;
   padding-top: 2rem;
+}
 
+h1 {
+  display: flex;
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-left: 2rem;
+  padding: 0;
+}
 
+main {
+  flex-grow: 1;
+  margin-bottom: 5rem;
+}
+
+progress {
+  appearance: base-select;
+  width: 100%;
+  height: 2px;
+  margin-bottom: 1rem;
+  visibility: hidden;
 }
 
 details {
   display: flex;
   flex-direction: column;
   color: inherit;
-  width: 68%;
+  width: 66%;
+  border-radius: 0.5rem;
+  padding: 1% 1% 0 1%;
+
   &:hover, summary:hover {
     cursor: pointer;
   }
@@ -60,71 +74,65 @@ menu {
   padding: 0.75rem 0 2rem 0;
   border-radius: 0.64rem;
 
-  .icon-button {
-    display: flex;
-    flex-direction: column;
-    font-family: inherit;
-    font-size: 1.5rem;
-    border: none;
-    height: 4rem;
-    width: 4rem;
-    padding: 0.3rem 0.4rem;
-    border-radius: 0.4rem;
-  }
+}
 
-  .icon-button label {
-    font-size: 2rem;
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-  }
+content {
+  display: flex;
+  height: 100%;
+  min-height: 5rem;
+  border-radius: 0 0 0.64rem 0.64rem;
+}
 
-  .icon-button:hover, .icon-button label:hover {
-    cursor: pointer;
-  }
+.empty-input::before {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  content: "⭳";
+  z-index: 2;
+  padding-bottom: 5rem;
+  font-size: 20rem;
+  opacity: 0.1;
+}
 
-  .icon-button:hover {
-    & label::after {
-      content: attr(title);
-      font-size: 1rem;
-      margin-top: 1.3rem;
-      margin-left: -40%;
-      width: 400%;
-      text-align: left;
-    }
-  }
+.icon-button {
+  display: flex;
+  flex-direction: column;
+  font-family: inherit;
+  font-size: 2rem;
+  border: none;
+  height: 4rem;
+  width: 4rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: 0.4rem;
+}
 
-  .icon-button:disabled {
-    & label:hover {
-      cursor: not-allowed;
-    }
-    opacity: 0.4;
+.icon-button:hover {
+  cursor: pointer;
+
+  &::after {
+    content: attr(data-title);
+    font-size: 1rem;
+    position: absolute;
+    position-area: bottom;
+    margin-top: 0.3rem;
+  }
+}
+
+.icon-button:disabled {
+  &:hover {
     cursor: not-allowed;
   }
+  opacity: 0.4;
 }
 
-.error {
-  font-family: inherit;
-  font-size: 1.4rem;
-}
+.icon-adjust {
+  font-size: 2.5rem;
+  line-height: 3.5rem;
 
-main {
-  color: #bbb;
-  flex-grow: 1;
-  margin-bottom: 1rem;
-  content {
-    display: flex;
-    height: 100%;
-    min-height: 5rem;
-    border-radius: 0 0 0.64rem 0.64rem;
+  &.icon-button::after {
+    margin-top: -0.8rem;
   }
-}
-
-progress {
-  width: 100%;
-  height: 0.5rem;
-  margin-bottom: 1rem;
-  visibility: hidden;
 }
 
 /*
@@ -136,12 +144,12 @@ progress {
        .
        .
     <div id="#tab-labels">
-        <label ...> <!-- tabs -->
+        <label ...> <!-- tab -->
         <label ...>
             .
             .
     <content>
-        <section ...> <!-- tab content -->
+        <section ...> <!-- tab-content -->
         <section ...>
               .
               .
@@ -162,7 +170,7 @@ main > input {
   display: none;
   flex-direction: column;
   width: 100%;
-  padding: 2rem;
+  padding: 3rem 2rem 1.5rem 2.5rem;
 }
 
 #tab-labels {
@@ -172,9 +180,6 @@ main > input {
 }
 
 .tab-label {
-  &:hover {
-    color: #ccc;
-  }
   display: flex;
   flex-grow: 1;
   justify-content: center;
@@ -183,31 +188,14 @@ main > input {
   cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
-  color: #555;
   z-index: 2;
-}
-
-#tab-label0 {
-  box-shadow: 12px 12px 12px #111;
-}
-
-#tab-label1 {
-  box-shadow: -12px 12px 12px #111;
 }
 
 /* selected tab content sections for radio button checked */
 main > input#tab0:checked ~ content > #tab-content0,
-main > input#tab1:checked ~ content > #tab-content1 {
+main > input#tab1:checked ~ content > #tab-content1,
+main > input#tab2:checked ~ content > #tab-content2 {
   display: flex;
-}
-
-/* selected tab label */
-main > input#tab0:checked ~ #tab-labels > #tab-label0,
-main > input#tab1:checked ~ #tab-labels > #tab-label1 {
-  color: #ccc;
-  background-color: #1a1a1a;
-  box-shadow: inset 0px 8px 12px #111;
-  border-radius: 0.64rem 0.64rem 0 0;
 }
 
 .tab-body {
@@ -218,4 +206,10 @@ main > input#tab1:checked ~ #tab-labels > #tab-label1 {
 .tab-footer {
   display: flex;
   justify-content: flex-end;
+  margin: 1.5rem 1rem;
+}
+
+.error {
+  font-family: inherit;
+  font-size: 1.4rem;
 }

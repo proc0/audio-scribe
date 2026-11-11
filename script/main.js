@@ -41,7 +41,7 @@ export function updateAppState(state, message, memo) {
   appState = state
 
   const infoDetails = document.getElementById('info')
-  const infoBody = infoDetails.querySelector('blockquote')
+  const infoBody = infoDetails.querySelector('p')
 
   if (state === STATE_ERROR) {
     console.error(message);

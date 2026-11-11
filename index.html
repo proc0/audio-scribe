@@ -3,9 +3,9 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<meta name="theme-color" content="dimgray" media="(prefers-color-scheme: dark)" />
-	<meta name="description" content="Liquid AI audio bulk transcription." />
-	<title>Liquid Scribe</title>
+	<!-- <meta name="theme-color" content="dimgray" media="(prefers-color-scheme: dark)" /> -->
+	<meta name="description" content="ASR speech to audio transcription" />
+	<title>Audio Scribe</title>
 	<link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,69 +15,61 @@
 	<script type="module" src="script/main.js"></script>
 </head>
 <template id="FileSystemAccess">
-	<button class="icon-button" id="folder-picker">
-		<label title="Choose folder">📁</label>
-	</button>
-	<button class="icon-button" id="file-picker">
-		<label title="Choose files">📄</label>
-	</button>
+	<button class="icon-button" id="folder-picker" data-title="Choose folder">🗁</button>
+	<button class="icon-button icon-adjust" id="file-picker" data-title="Choose files">🗋</button>
 </template>
 <template id="OriginPrivateFileSystem">
-	<button class="icon-button" id="folder-picker">
-		<label title="Choose folder">📁</label>
-	</button>
+	<button class="icon-button" id="folder-picker" data-title="Choose folder">🗁</button>
 	<input type="file" id="input-folder-picker" webkitdirectory directory multiple style="display: none"/>
-	<button class="icon-button" id="file-picker">
-		<label title="Choose files">📄</label>
-	</button>
+	
+	<button class="icon-button icon-adjust" id="file-picker" data-title="Choose files">🗋</button>
 	<input type="file" id="input-file-picker" multiple style="display: none"/>
 </template>
 <template id="None">
 	<label class="error">Error! This browser does not have a compatible file system API.</label>
 </template>
 <template id="ModelControls">
-	<!-- 💾 📥 -->
-	<button class="icon-button" id="load-model">
-		<label title="Load model">📥</label>
-	</button>
-	<button class="icon-button" id="clear-cache">
-		<label title="Clear cache">✖</label>
-	</button>
+	<button class="icon-button icon-adjust" id="load-model" data-title="Load model">⇩</button>
+	<button class="icon-button icon-adjust" id="clear-cache" data-title="Clear cache">🗑</button>
 </template>
+<!-- ✘ 🗐 ⬚ -->
 <body>
 	<header>
-		<h1>Liquid Scribe</h1>
+		<h1>Audio Scribe</h1>
 	</header>
 	<details id="info">
 	  <summary>🛈 Info</summary>
-	  <blockquote></blockquote>
+	  <p></p>
 	</details>
 	<menu id="controls"></menu>
 	<main>
-		<progress id="loading-bar" max="100" value="0"></progress>
+		<progress max="100" value="0"></progress>
 		<input type="radio" name="tabset" id="tab0" aria-controls="tab-content0" checked>
 		<input type="radio" name="tabset" id="tab1" aria-controls="tab-content1">
+		<!-- <input type="radio" name="tabset" id="tab2" aria-controls="tab-content2"> -->
 		<div id="tab-labels">
 			<label for="tab0" id="tab-label0" class="tab-label">INPUT</label>
 			<label for="tab1" id="tab-label1" class="tab-label">OUTPUT</label>
+			<!-- <label for="tab2" id="tab-label2" class="tab-label">INFO</label> -->
 		</div>
 		<content id="tab-contents">
 		    <section id="tab-content0" class="tab-content">
-		    	<div class="tab-body"></div>
+		    	<div class="tab-body empty-input"></div>
 		    	<div class="tab-footer">
-					<button class="text-button" id="confirm-transcribe">
-						<label title="Confirm transcribe">Confirm</label>
-					</button>
+					<button class="icon-button icon-adjust" id="transcribe" data-title="Transcribe">✔</button>
 		    	</div>
 		    </section>
 		    <section id="tab-content1" class="tab-content">
 		    	<div class="tab-body"></div>
 		    	<div class="tab-footer">
-					<button class="text-button" id="save-transcribe">
-						<label title="Save">Save</label>
-					</button>
+					<button class="icon-button icon-adjust" id="save" data-title="Save">🖫</button>
 		    	</div>
 		    </section>
+		<!-- <section id="tab-content2" class="tab-content">
+		    	<div class="tab-body"></div>
+		    	<div class="tab-footer">
+		    	</div>
+		    </section> -->
 		</content>
 	</main>
 	<script type="module" src="script/init.js"></script>
