@@ -1,16 +1,16 @@
-export class AudioPreview extends HTMLElement {
+export class AudioFile extends HTMLElement {
   data = null
 
   constructor() {
     super()
   }
 
-  render(audioFile) {
-    const audioTemplate = document.getElementById('audio-template').content.cloneNode(true)
+  render(file) {
+    const audioTemplate = document.getElementById('audio-file').content.cloneNode(true)
     this.appendChild(audioTemplate)
 
     const audioTitle = this.querySelector('.audio-title')
-    audioTitle.textContent = audioFile.name
+    audioTitle.textContent = file.name
 
     const audioSubtitle = this.querySelector('.audio-subtitle')
     audioSubtitle.textContent = `size: ${this.data.audioData.length} • sampleRate: ${this.data.sampleRate}`

@@ -5,6 +5,13 @@ import {
   getCacheInfo 
 } from './audio-model'
 
+import { 
+  OPFSPicker, 
+  FSAPicker
+} from './audio-picker'
+import {
+  AudioFile
+} from './audio-file'
 import {
   STATE_DEFAULT,
   STATE_CHECKING,
@@ -18,19 +25,10 @@ import {
   MODELS,
   DEFAULT_MODEL,
 } from './const'
-import { 
-  OPFSPicker, 
-  FSAPicker
-} from './picker'
-import {
-  AudioPreview
-} from './audio-preview'
 
-// TODO: rename audio-preview to audio-file
-// TODO: rename picker to audio-picker
+
 // TODO: refactor and cleanup class names
 // TODO: refactor our all text into index.html templates or something
-
 
 let appState = STATE_DEFAULT
 let transcribeFiles = []
@@ -113,7 +111,7 @@ function getCacheSizeText(usedMB) {
 
 export function initialize(filePickerType) {
   // define custom elements
-  customElements.define('audio-preview', AudioPreview)
+  customElements.define('audio-file', AudioFile)
   // customElements.define('input-view', InputView)
 
   const controls = document.getElementById('controls')
@@ -127,32 +125,32 @@ export function initialize(filePickerType) {
 
   // folder picker event
   document.getElementById('folder-picker').addEventListener('click', async (event) => {
-    await picker.onClickSelectFolder(event, async (audioFiles) => {
+    await picker.onClickSelectFolder(event, async (files) => {
       const inputTab = document.querySelector('#tab-content0 .tab-body')
       inputTab.classList.remove('empty-input')
 
-      for (const audioFile of audioFiles) {
-        const audioPreview = document.createElement('audio-preview')
-        audioPreview.data = await loadAudioFile(audioFile);
+      for (const file of files) {
+        const audioFile = document.createElement('audio-file')
+        audioFile.data = await loadAudioFile(file);
 
-        audioPreview.render(audioFile)
-        inputTab.appendChild(audioPreview)
+        audioFile.render(file)
+        inputTab.appendChild(audioFile)
       }
     })
   })
 
   // file picker event
   document.getElementById('file-picker').addEventListener('click', async (event) => {
-    await picker.onClickSelectFile(event, async (audioFiles) => {
+    await picker.onClickSelectFile(event, async (files) => {
       const inputTab = document.querySelector('#tab-content0 .tab-body')
       inputTab.classList.remove('empty-input')
 
-      for (const audioFile of audioFiles) {
-        const audioPreview = document.createElement('audio-preview')
-        audioPreview.data = await loadAudioFile(audioFile);
+      for (const file of files) {
+        const audioFile = document.createElement('audio-file')
+        audioFile.data = await loadAudioFile(file);
 
-        audioPreview.render(audioFile)
-        inputTab.appendChild(audioPreview)
+        audioFile.render(file)
+        inputTab.appendChild(audioFile)
       }
     })
   })
@@ -228,7 +226,7 @@ export function initialize(filePickerType) {
   document.getElementById('transcribe').addEventListener('click', async (event) => {
     // let generatedText = ''
     // let tokenCount = 0
-    const audioPreviews = document.querySelectorAll('audio-preview')
+    const audioFiles = document.querySelectorAll('audio-file')
 
     const onTokenCallback = (token, tokenId) => {
       if (token.includes('<|im_end|>') || token.includes('<|endoftext|>')) {
@@ -243,7 +241,7 @@ export function initialize(filePickerType) {
       return false;
     };
 
-    let audioToSend = audioPreviews[0].data
+    let audioToSend = audioFiles[0].data
     const finalText = await audioModel.transcribe(
       audioToSend.audioData,
       audioToSend.sampleRate,

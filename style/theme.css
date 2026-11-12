@@ -27,7 +27,7 @@ progress {
   background-color: rgb(147, 205, 12);
 }
 
-.icon-button, audio-preview {
+.icon-button, audio-file {
   color: inherit;
   background-color: rgb(34, 34, 45);
   box-shadow: 0.4rem 0.3rem 0.8rem rgb(14, 15, 15);
@@ -99,7 +99,7 @@ main > input#tab2:checked ~ #tab-labels > #tab-label1 {
   }
 }
 
-audio-preview {
+audio-file {
   .audio-header {
     border-bottom: 1px solid rgb(62 62 62);
     box-shadow: 0 0.1rem 0 black;
