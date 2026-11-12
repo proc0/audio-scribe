@@ -1,2 +1,2 @@
-# liquid-scribe
-Audio to text transcription using Liquid AI LFM audio model
+# 🖋 Audio Scribe
+Audio to text transcription using Liquid AI LFM2.5 audio model

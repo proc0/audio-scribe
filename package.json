@@ -1,5 +1,5 @@
 {
-  "name": "liquid-scribe",
+  "name": "audio-scribe",
   "private": true,
   "version": "0.1.0",
   "description": "Liquid AI LFM2.5 bulk audio to text transcription (ASR)",
