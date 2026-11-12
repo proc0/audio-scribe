@@ -2,11 +2,13 @@ html {
   font-family: 'Roboto', 'Arial', sans-serif;
   font-optical-sizing: auto;
   font-size: 0.15in;
+  height: 100vh;
 }
 
 body {
-  height: 100vh;
+  height: 100%;
   align-items: center;
+  overflow: hidden;
 }
 
 body, main, menu, h3 {
@@ -83,15 +85,18 @@ content {
   border-radius: 0 0 0.64rem 0.64rem;
 }
 
-.empty-input::before {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.empty-input {
+  /*display: flex;*/
+  /*justify-content: center;*/
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1'><text x='40vw' y='70vh' fill='white' opacity='0.1' font-size='16rem'>⭳</text></svg>");
+  /*align-items: center;*/
+  /*width: 100%;*/
+  /*content: "⭳";*/
+  /*z-index: 2;*/
+  /*font-size: 20rem;*/
+  /*opacity: 0.1;*/
   width: 100%;
-  content: "⭳";
-  z-index: 2;
-  font-size: 20rem;
-  opacity: 0.1;
+  height: 100%;
 }
 
 .icon-button {
@@ -199,7 +204,7 @@ main > input#tab2:checked ~ content > #tab-content2 {
 
 .tab-body {
   display: flex;
-  flex-grow: 0.8;
+  flex-grow: 1;
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
@@ -207,9 +212,9 @@ main > input#tab2:checked ~ content > #tab-content2 {
 }
 
 audio-preview {
+  padding: 1rem 1.35rem;
   display: flex;
   flex-direction: column;
-  padding: 1rem 1.35rem;
   margin-bottom: 0.5rem;
   border-radius: 1rem;
   width: 95%;
