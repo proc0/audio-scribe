@@ -15,5 +15,9 @@ export class AudioFile extends HTMLElement {
     const audioSubtitle = this.querySelector('.audio-subtitle')
     audioSubtitle.textContent = `size: ${this.data.audioData.length} • sampleRate: ${this.data.sampleRate}`
 
+    const buttonRemove = this.querySelector('.button-remove')
+    buttonRemove.addEventListener('click', () => {
+      this.remove()
+    })
   }
 }
