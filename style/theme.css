@@ -3,10 +3,12 @@ html {
   background-color: rgb(34, 34, 42);
 }
 
-/*body {
+/*
+body {
   background: linear-gradient(0deg, rgba(22, 22, 22, 1) 0%, rgba(34, 34, 42, 0) 33%);
 }
 */
+
 menu {
   background-color: rgb(28, 26, 25);
   box-shadow: inset 0.5rem 0.4rem 1rem rgb(14, 15, 15);
@@ -15,7 +17,7 @@ menu {
 
 content {
   background-color: rgb(28, 26, 25);
-  box-shadow: inset 0.5rem -0.8rem 1rem rgb(14, 15, 15);
+  box-shadow: inset 0.7rem -0.5rem 0.5rem rgb(14, 15, 15);
   border-bottom: 1px solid rgb(60, 53, 50);
   border-left: 1px solid rgb(60, 53, 50);
   border-right: 1px solid rgb(60, 53, 50);

@@ -50,8 +50,9 @@
 	<menu id="controls"></menu>
 	<main>
 		<progress max="100" value="0"></progress>
-		<input type="radio" name="tabset" id="tab0" aria-controls="tab-content0" checked>
-		<input type="radio" name="tabset" id="tab1" aria-controls="tab-content1">
+		<!-- main content tabs -->
+		<input type="radio" name="tabset" id="tab0" class="tab-input" aria-controls="tab-content0" checked>
+		<input type="radio" name="tabset" id="tab1" class="tab-input" aria-controls="tab-content1">
 		<!-- <input type="radio" name="tabset" id="tab2" aria-controls="tab-content2"> -->
 		<div id="tab-labels">
 			<label for="tab0" id="tab-label0" class="tab-label">INPUT</label>
@@ -62,13 +63,13 @@
 		    <section id="tab-content0" class="tab-content">
 		    	<div class="tab-body empty-input"></div>
 		    	<div class="tab-footer">
-					<button class="icon-button icon-adjust" id="transcribe" data-title="Transcribe">🖋</button>
+					<button class="icon-button icon-adjust" id="transcribe" data-title="Transcribe" disabled>🖋</button>
 		    	</div>
 		    </section>
 		    <section id="tab-content1" class="tab-content">
 		    	<div class="tab-body"></div>
 		    	<div class="tab-footer">
-					<button class="icon-button icon-adjust" id="save" data-title="Save">🖫</button>
+					<button class="icon-button icon-adjust" id="save" data-title="Save" disabled>🖫</button>
 		    	</div>
 		    </section>
 		<!-- <section id="tab-content2" class="tab-content">
