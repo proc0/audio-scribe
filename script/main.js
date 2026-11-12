@@ -26,6 +26,12 @@ import {
   AudioPreview
 } from './audio-preview'
 
+// TODO: rename audio-preview to audio-file
+// TODO: rename picker to file-picker
+// TODO: refactor and cleanup class names
+// TODO: refactor our all text into index.html templates or something
+
+
 let appState = STATE_DEFAULT
 let transcribeFiles = []
 
@@ -134,7 +140,7 @@ export function initialize(filePickerType) {
       }
     })
   })
-  
+
   // file picker event
   document.getElementById('file-picker').addEventListener('click', async (event) => {
     await picker.onClickSelectFile(event, async (audioFiles) => {

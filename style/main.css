@@ -86,28 +86,18 @@ content {
 }
 
 .empty-input {
-  /*display: flex;*/
-  /*justify-content: center;*/
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1'><text x='40vw' y='70vh' fill='white' opacity='0.1' font-size='16rem'>⭳</text></svg>");
-  /*align-items: center;*/
-  /*width: 100%;*/
-  /*content: "⭳";*/
-  /*z-index: 2;*/
-  /*font-size: 20rem;*/
-  /*opacity: 0.1;*/
-  width: 100%;
-  height: 100%;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1'><text x='45vw' y='70vh' fill='white' opacity='0.1' font-size='16rem'>⭳</text></svg>");
 }
 
 .icon-button {
+  width: 4rem;
+  height: 4rem;
   display: flex;
   flex-direction: column;
   font-family: inherit;
   font-size: 2rem;
-  border: none;
-  height: 4rem;
-  width: 4rem;
   padding: 0.3rem 0.4rem;
+  border: none;
   border-radius: 0.4rem;
 }
 
@@ -137,6 +127,21 @@ content {
   &.icon-button::after {
     margin-top: -0.8rem;
   }
+}
+
+.icon-button-small {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  padding: 0.3rem 0.4rem;
+  border: none;
+  border-radius: 0.4rem;
+}
+
+.icon-button-small:hover {
+  cursor: pointer;
 }
 
 /*
@@ -203,25 +208,38 @@ main > input#tab2:checked ~ content > #tab-content2 {
 }
 
 .tab-body {
+  max-height: 40vh;
   display: flex;
   flex-grow: 1;
   flex-direction: column;
+  padding: 1rem 1.5rem 1rem 1rem;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 40vh;
+  scrollbar-width: thin;
 }
 
 audio-preview {
-  padding: 1rem 1.35rem;
   display: flex;
   flex-direction: column;
+  padding: 1.5rem 2rem 1.5rem 1.5rem;
   margin-bottom: 0.5rem;
   border-radius: 1rem;
-  width: 95%;
 
-  h3 {
-    font-size: 1.35rem;
+  .audio-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 1.3rem;
     margin-bottom: 0.8rem;
+  }
+
+  .audio-title {
+    font-size: 1.35rem;
+    font-weight: normal;
+  }
+
+  .audio-subtitle {
+    font-size: 0.9rem;
   }
 }
 

@@ -32,13 +32,16 @@
 	<button class="icon-button icon-adjust" id="clear-cache" data-title="Clear cache">🗑</button>
 </template>
 <template id="audio-template">
-	<h3 class="audio-title"></h3>
+	<div class="audio-header">
+		<h3 class="audio-title"></h3>
+		<button class="icon-button-small" title="Remove">✖</button>
+	</div>
 	<div class="audio-subtitle"></div>
 </template>
-<!-- ✘ 🗐 ⬚ -->
+<!-- ✔ ✘ 🗐 ⬚ 🖋 -->
 <body>
 	<header>
-		<h1>Audio Scribe</h1>
+		<h1>🖋 Audio Scribe</h1>
 	</header>
 	<details id="info">
 	  <summary>🛈 Info</summary>
@@ -59,7 +62,7 @@
 		    <section id="tab-content0" class="tab-content">
 		    	<div class="tab-body empty-input"></div>
 		    	<div class="tab-footer">
-					<button class="icon-button icon-adjust" id="transcribe" data-title="Transcribe">✔</button>
+					<button class="icon-button icon-adjust" id="transcribe" data-title="Transcribe">🖋</button>
 		    	</div>
 		    </section>
 		    <section id="tab-content1" class="tab-content">
