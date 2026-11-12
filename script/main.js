@@ -27,7 +27,7 @@ import {
 } from './audio-preview'
 
 // TODO: rename audio-preview to audio-file
-// TODO: rename picker to file-picker
+// TODO: rename picker to audio-picker
 // TODO: refactor and cleanup class names
 // TODO: refactor our all text into index.html templates or something
 

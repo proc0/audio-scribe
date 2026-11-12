@@ -1,10 +1,7 @@
-// HuggingFace model URL
-export const MODEL_URL = 'https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B-ONNX/resolve/main';
-
 // Model configurations
 export const MODELS = {
   'LFM2.5-Audio-1.5B-Q4': {
-    path: MODEL_URL,
+    path: 'https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B-ONNX/resolve/main',
     label: 'LFM2.5-Audio-1.5B Q4 (~1.6 GB)',
     quantization: {
       decoder: 'q4',
