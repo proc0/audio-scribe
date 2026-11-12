@@ -25,7 +25,7 @@ progress {
   background-color: rgb(147, 205, 12);
 }
 
-.icon-button {
+.icon-button, audio-preview {
   color: inherit;
   background-color: rgb(34, 34, 45);
   box-shadow: 0.4rem 0.3rem 0.8rem rgb(14, 15, 15);

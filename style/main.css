@@ -9,7 +9,7 @@ body {
   align-items: center;
 }
 
-body, main, menu {
+body, main, menu, h3 {
   margin: 0;
   padding: 0;
   display: flex;
@@ -90,7 +90,6 @@ content {
   width: 100%;
   content: "⭳";
   z-index: 2;
-  padding-bottom: 5rem;
   font-size: 20rem;
   opacity: 0.1;
 }
@@ -200,13 +199,36 @@ main > input#tab2:checked ~ content > #tab-content2 {
 
 .tab-body {
   display: flex;
-  flex-grow: 1;
+  flex-grow: 0.8;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 40vh;
+}
+
+audio-preview {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.35rem;
+  margin-bottom: 0.5rem;
+  border-radius: 1rem;
+  width: 95%;
+
+  h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.8rem;
+  }
 }
 
 .tab-footer {
   display: flex;
   justify-content: flex-end;
-  margin: 1.5rem 1rem;
+  margin: 1.5rem 2rem;
+
+  .icon-button {
+    width: 12rem;
+    border-radius: 1rem;
+  }
 }
 
 .error {
