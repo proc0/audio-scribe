@@ -49,6 +49,14 @@ details {
   border-radius: 0.5rem;
   padding: 1% 1% 0 1%;
 
+  summary {
+    font-size: 1.3rem;
+  }
+
+  p {
+    margin-left: 1.5rem;
+  }
+
   &:hover, summary:hover {
     cursor: pointer;
   }
@@ -84,7 +92,7 @@ content {
 }
 
 .empty-input {
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1'><text x='45vw' y='70vh' fill='white' opacity='0.1' font-size='16rem'>⭳</text></svg>");
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1'><text x='30vw' y='70vh' fill='white' opacity='0.05' font-size='13rem'>⭳🗐</text></svg>");
 }
 
 .icon-button {
@@ -93,7 +101,8 @@ content {
   display: flex;
   flex-direction: column;
   font-family: inherit;
-  font-size: 2rem;
+  font-size: 2.5rem;
+  line-height: 3.5rem;
   padding: 0.3rem 0.4rem;
   border: none;
   border-radius: 0.4rem;
@@ -107,7 +116,7 @@ content {
     font-size: 1rem;
     position: absolute;
     position-area: bottom;
-    margin-top: 0.3rem;
+    margin-top: -0.8rem;
   }
 }
 
@@ -120,12 +129,8 @@ content {
 }
 
 .icon-adjust {
-  font-size: 2.5rem;
-  line-height: 3.5rem;
-
-  &.icon-button::after {
-    margin-top: -0.8rem;
-  }
+  font-size: 2.2rem;
+  padding-left: 0.65rem;
 }
 
 .icon-button-small {
@@ -179,7 +184,6 @@ CSS-only tabs using hidden radio buttons
   padding: 1rem;
   border: 1px solid transparent;
   font-size: 1rem;
-  font-weight: 600;
   z-index: 2;
 }
 

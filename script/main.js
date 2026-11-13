@@ -4,7 +4,6 @@ import {
   STATE_ERROR,
   FilePickerAPI,
 } from './const'
-// import { initialize, updateAppState } from './main'
 import { AudioScribe } from './audio-scribe'
 
 (async () => {
