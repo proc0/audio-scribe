@@ -74,6 +74,13 @@ export class AudioScribe {
     document.getElementById('load-model').addEventListener('click', this.loadModel.bind(this))
     document.getElementById('settings').addEventListener('click', this.onClickSettings.bind(this))
 
+    // tab label events to keep state
+    document.querySelectorAll('.tab-label').forEach((tab) => {
+      tab.addEventListener('click', (event) => {
+        this.lastTabOpened = event.currentTarget.getAttribute('for')
+      })
+    })
+
     document.getElementById('transcribe').addEventListener('click', this.transcribe.bind(this))
 
     // remember user action on info details opening or closing
@@ -272,7 +279,6 @@ export class AudioScribe {
     } else {        
       settingsLabel.classList.remove('hidden')
       settingsContent.classList.remove('hidden')
-      this.lastTabOpened = document.querySelector('input:checked').getAttribute('id')
       tab0.checked = false
       tab1.checked = false
       tab2.checked = true

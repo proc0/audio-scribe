@@ -150,11 +150,9 @@ content {
 }
 
 .icon-button-small {
-  width: 2rem;
-  height: 2rem;
   display: flex;
-  flex-direction: column;
-  font-size: 1rem;
+  justify-content: center;
+  font-size: 1.3rem;
   line-height: 1.32rem;
   padding: 0.3rem 0.4rem;
   border-radius: 0.4rem;
@@ -278,7 +276,7 @@ audio-file {
     .icon-button-large {
       line-height: 2.5rem;
     }
-    
+
     .time-elapsed, .time-remaining {
       display: flex;
       text-wrap: nowrap;
@@ -300,6 +298,13 @@ audio-file {
       &:hover {
         cursor: pointer;
       }
+    }
+
+    .button-volume {
+      display: flex;
+      text-align: left;
+      font-size: 2rem;
+      margin-right: 1rem;
     }
   }
 }

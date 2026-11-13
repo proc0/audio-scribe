@@ -86,8 +86,10 @@ export class AudioFile extends HTMLElement {
   }
 
   onSeek(event) {
-     const clickPosition = event.offsetX / this.progressBar.offsetWidth
-     this.audio.currentTime = clickPosition * this.audio.duration
+    if (!this.audio.src) return
+
+    const clickPosition = event.offsetX / this.progressBar.offsetWidth
+    this.audio.currentTime = clickPosition * this.audio.duration
   }
 
   onTimeUpdate() {
