@@ -65,6 +65,17 @@ progress {
   box-shadow: 0.1rem 0.1rem 0 black;
 }
 
+.icon-button-large {
+  color: rgb(82, 82, 82);
+  background-color: rgb(34, 34, 45);
+  border: none;
+  opacity: 0.5;
+}
+
+.icon-button-large:hover {
+  color: rgb(147, 205, 12);
+}
+
 .tab-body {
   background-color: rgb(33, 29, 30);
   scrollbar-color: rgb(34, 42, 52) rgb(130, 130, 130);
@@ -107,7 +118,7 @@ main > input#tab2:checked ~ #tab-labels > #tab-label1 {
 }
 
 audio-file {
-  .audio-header {
+  .audio-title {
     border-bottom: 1px solid rgb(62 62 62);
     box-shadow: 0 0.1rem 0 black;
   }

@@ -90,11 +90,14 @@ main {
 }
 
 progress {
-  appearance: base-select;
   width: 100%;
   height: 2px;
-  margin-bottom: 1rem;
+  appearance: none;
+}
+
+#loading-bar {
   visibility: hidden;
+  margin-bottom: 1rem;
 }
 
 content {
@@ -158,6 +161,17 @@ content {
 }
 
 .icon-button-small:hover {
+  cursor: pointer;
+}
+
+.icon-button-large {
+  display: flex;
+  flex-direction: column;
+  font-size: 3rem;
+  padding: 0.3rem 0.4rem;
+}
+
+.icon-button-large:hover {
   cursor: pointer;
 }
 
@@ -242,17 +256,51 @@ audio-file {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding-bottom: 1.3rem;
-    margin-bottom: 0.8rem;
+    align-items: center;
   }
 
   .audio-title {
     font-size: 1.35rem;
     font-weight: normal;
+    padding: 0.8rem 0;
+    margin-bottom: 0.8rem;
   }
 
   .audio-subtitle {
     font-size: 0.9rem;
+  }
+
+  .audio-player {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+
+    .icon-button-large {
+      line-height: 2.5rem;
+    }
+    
+    .time-elapsed, .time-remaining {
+      display: flex;
+      text-wrap: nowrap;
+      padding-bottom: 0.2rem;
+    }
+    
+    .time-elapsed {
+      margin-left: 1rem;
+    }
+    
+    .time-remaining {
+      margin-right: 1rem;
+    }
+    
+    progress {
+      height: 1rem;
+      margin: 0 1rem;
+      opacity: 0.5;
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 }
 
@@ -275,3 +323,21 @@ audio-file {
   font-family: inherit;
   font-size: 1.4rem;
 }
+
+/*
+audio::-webkit-media-controls-panel
+audio::-webkit-media-controls-mute-button
+audio::-webkit-media-controls-play-button
+audio::-webkit-media-controls-timeline-container
+audio::-webkit-media-controls-current-time-display
+audio::-webkit-media-controls-time-remaining-display
+audio::-webkit-media-controls-timeline
+audio::-webkit-media-controls-volume-slider-container
+audio::-webkit-media-controls-volume-slider
+audio::-webkit-media-controls-seek-back-button
+audio::-webkit-media-controls-seek-forward-button
+audio::-webkit-media-controls-fullscreen-button
+audio::-webkit-media-controls-rewind-button
+audio::-webkit-media-controls-return-to-realtime-button
+audio::-webkit-media-controls-toggle-closed-captions-button
+*/

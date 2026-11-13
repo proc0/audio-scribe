@@ -1,5 +1,9 @@
+import { createWavBlob } from './audio-tool'
+
 export class AudioFile extends HTMLElement {
   data = null
+  audio = null
+  progressBar = null
 
   constructor() {
     super()
@@ -17,7 +21,18 @@ export class AudioFile extends HTMLElement {
     const audioSize = this.formatSize(this.data.audioData.byteLength)
     // file size on disk (encoding and bit rate will vary)
     const fileSize = this.formatSize(file.size)
-    audioSubtitle.textContent = `size: ${audioSize} (${fileSize} uploaded) • sample rate: ${this.data.sampleRate}`
+    audioSubtitle.textContent = `file size: ${fileSize} • sample size: ${audioSize} • sample rate: ${this.data.sampleRate}kHz`
+
+    const audioPlayer = this.querySelector('.audio-player')
+    this.progressBar = audioPlayer.querySelector('progress')
+    this.progressBar.addEventListener('click', this.onSeek.bind(this))
+
+    this.audio = audioPlayer.querySelector('audio')
+    this.audio.addEventListener('timeupdate', this.onTimeUpdate.bind(this))
+    this.audio.addEventListener('ended', this.onEnded.bind(this))
+
+    audioPlayer.querySelector('.button-play').addEventListener('click', this.togglePlay.bind(this))
+    audioPlayer.querySelector('.button-stop').addEventListener('click', this.togglePlay.bind(this))
 
     const buttonRemove = this.querySelector('.button-remove')
     buttonRemove.addEventListener('click', () => {
@@ -34,6 +49,54 @@ export class AudioFile extends HTMLElement {
       unit = 'MB'
     }
 
-    return `${resultSize.toFixed(1)}${unit}`
+    return `${Math.round(resultSize)}${unit}`
+  }
+
+  formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return mins + ':' + (secs < 10 ? '0' : '') + secs;
+  }
+
+  togglePlay() {
+    if (!this.audio.src) {
+      // NOTE: to play original file, save file in constructor and use arrayBuffer:
+      // const blob = new Blob([await file.arrayBuffer()], { type: 'audio/wav' });
+      // const audioUrl = URL.createObjectURL(blob)
+
+      const wavBlob = createWavBlob(this.data.audioData, this.data.sampleRate)
+      const audioUrl = URL.createObjectURL(wavBlob)
+      this.audio.src = audioUrl
+    }
+
+    if (this.audio.paused) {
+      this.audio.play();
+      this.querySelector('.button-play').classList.add('hidden')
+      this.querySelector('.button-stop').classList.remove('hidden')
+    } else {
+      this.audio.pause();
+      this.querySelector('.button-play').classList.remove('hidden')
+      this.querySelector('.button-stop').classList.add('hidden')
+    }
+  }
+
+  onEnded() {
+    this.querySelector('.button-play').classList.remove('hidden')
+    this.querySelector('.button-stop').classList.add('hidden')
+  }
+
+  onSeek(event) {
+     const clickPosition = event.offsetX / this.progressBar.offsetWidth
+     this.audio.currentTime = clickPosition * this.audio.duration
+  }
+
+  onTimeUpdate() {
+    this.progressBar.value = (this.audio.currentTime / this.audio.duration) * 100
+    this.progressBar.previousSibling.textContent = this.formatTime(this.audio.currentTime)
+    this.progressBar.nextSibling.textContent = `-${this.formatTime(this.audio.duration - this.audio.currentTime)}`
+  }
+
+  changeVolume(change) {
+     this.audio.volume = Math.max(0, Math.min(1, this.audio.volume + change))
   }
 }

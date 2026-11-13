@@ -110,7 +110,7 @@ export class AudioScribe {
     }
 
     if (this.state === STATE_LOADING) {
-      const progress = document.querySelector('progress')
+      const progress = document.getElementById('loading-bar')
 
       if (this.lastState !== this.state) {
         progress.value = 0
