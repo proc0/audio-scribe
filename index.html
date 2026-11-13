@@ -31,6 +31,7 @@
 <template id="ModelControls">
 	<button class="icon-button" id="load-model" data-title="Load model">⇩</button>
 	<button class="icon-button" id="clear-cache" data-title="Clear cache">🗑</button>
+	<button class="icon-button" id="settings" data-title="Settings">⏲</button>
 </template>
 <template id="audio-file">
 	<div class="audio-header">
@@ -39,7 +40,7 @@
 	</div>
 	<div class="audio-subtitle"></div>
 </template>
-<!-- ✔ ✘ 🗐 ⬚ 🖋 -->
+<!-- 🗁 🗋 ⇩ 🗑 ✔ ✘ 🗐 ⎘ ⬚ 🖋 ⚙ 🛠 ⏲ -->
 <body>
 	<div class="noise-background"></div>
 	<header>
@@ -55,11 +56,11 @@
 		<!-- main content tabs -->
 		<input type="radio" name="tabset" id="tab0" class="tab-input" aria-controls="tab-content0" checked>
 		<input type="radio" name="tabset" id="tab1" class="tab-input" aria-controls="tab-content1">
-		<!-- <input type="radio" name="tabset" id="tab2" aria-controls="tab-content2"> -->
+		<input type="radio" name="tabset" id="tab2" class="tab-input" aria-controls="tab-content2">
 		<div id="tab-labels">
 			<label for="tab0" id="tab-label0" class="tab-label">INPUT</label>
 			<label for="tab1" id="tab-label1" class="tab-label">OUTPUT</label>
-			<!-- <label for="tab2" id="tab-label2" class="tab-label">INFO</label> -->
+			<label for="tab2" id="tab-label2" class="tab-label hidden">SETTINGS</label>
 		</div>
 		<content id="tab-contents" class="noise-animated">
 		    <section id="tab-content0" class="tab-content">
@@ -74,11 +75,11 @@
 					<button class="icon-button" id="save" data-title="Save" disabled>🖫</button>
 		    	</div>
 		    </section>
-		<!-- <section id="tab-content2" class="tab-content">
+			<section id="tab-content2" class="tab-content hidden">
 		    	<div class="tab-body"></div>
 		    	<div class="tab-footer">
 		    	</div>
-		    </section> -->
+		    </section>
 		</content>
 	</main>
 </body>

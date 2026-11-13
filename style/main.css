@@ -92,7 +92,7 @@ content {
 }
 
 .empty-input {
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1'><text x='30vw' y='70vh' fill='white' opacity='0.05' font-size='13rem'>⭳🗐</text></svg>");
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1'><text x='40vw' y='70vh' fill='white' opacity='0.05' font-size='15rem'>⎘</text></svg>");
 }
 
 .icon-button {
@@ -252,6 +252,10 @@ audio-file {
     width: 12rem;
     border-radius: 1rem;
   }
+}
+
+.hidden {
+  display: none;
 }
 
 .error {

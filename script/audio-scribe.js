@@ -29,6 +29,8 @@ export class AudioScribe {
   state = STATE_DEFAULT
   audioModel = null
 
+  settingsOpened = false
+
   constructor(filePickerType) {
     // define custom elements
     customElements.define('audio-file', AudioFile)
@@ -69,6 +71,25 @@ export class AudioScribe {
     document.getElementById('load-model').addEventListener('click', this.loadModel.bind(this))
 
     document.getElementById('transcribe').addEventListener('click', this.transcribe.bind(this))
+
+    document.getElementById('settings').addEventListener('click', () => {
+
+      if (this.settingsOpened) {
+        document.getElementById('tab-label2').classList.add('hidden')
+        document.getElementById('tab-content2').classList.add('hidden')
+        document.getElementById('tab0').checked = false
+        document.getElementById('tab1').checked = true
+        document.getElementById('tab2').checked = false
+        this.settingsOpened = false
+      } else {        
+        document.getElementById('tab-label2').classList.remove('hidden')
+        document.getElementById('tab-content2').classList.remove('hidden')
+        document.getElementById('tab0').checked = false
+        document.getElementById('tab1').checked = false
+        document.getElementById('tab2').checked = true
+        this.settingsOpened = true
+      }
+    })
   }
 
   update(state, message, memo) {
