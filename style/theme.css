@@ -120,3 +120,7 @@ audio-file {
 .error {
   color: #ee1212;
 }
+
+.ready {
+  color: rgb(117, 185, 12);
+}

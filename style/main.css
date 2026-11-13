@@ -53,13 +53,26 @@ details {
     font-size: 1.3rem;
   }
 
-  p {
+  .detail-text {
     margin-left: 1.5rem;
+    max-height: 2.5rem;
+    overflow: hidden;
   }
 
-  &:hover, summary:hover {
+  &:hover {
+    .detail-text {
+      overflow: visible;
+    }
+    z-index: 3;
+  }
+
+  summary:hover {
     cursor: pointer;
   }
+}
+
+.detail-text {
+  white-space: pre-wrap;
 }
 
 menu {

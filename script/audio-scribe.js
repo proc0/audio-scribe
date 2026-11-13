@@ -27,33 +27,36 @@ import {
 
 export class AudioScribe {
   state = STATE_DEFAULT
+  lastState = STATE_DEFAULT
   audioModel = null
+  audioPicker = null
 
   settingsOpened = false
   lastTabOpened = 'tab0'
+  infoOpened = true
 
-  constructor(filePickerType) {
+  constructor(fileAPI) {
     // define custom elements
     customElements.define('audio-file', AudioFile)
     // customElements.define('input-view', InputView)
 
     const controls = document.getElementById('controls')
     // instantiate folder and file picker template
-    let filePickerTemplate = document.getElementById(filePickerType.description)
-    let filePickerElement = filePickerTemplate.content.cloneNode(true)
-    controls.appendChild(filePickerElement)
+    let audioPickerTemplate = document.getElementById(fileAPI.description)
+    let audioPickerElement = audioPickerTemplate.content.cloneNode(true)
+    controls.appendChild(audioPickerElement)
 
     // initialize appropriate file picker and bind events
-    const picker = filePickerType.description == PICKER_FSA ? new FSAPicker : new OPFSPicker
+    this.audioPicker = fileAPI.description == PICKER_FSA ? new FSAPicker : new OPFSPicker
 
     // folder picker event
     document.getElementById('folder-picker').addEventListener('click', async (event) => {
-      await picker.onClickSelectFolder(event, this.addAudioFiles.bind(this))
+      await this.audioPicker.onClickSelectFolder(event, this.addAudioFiles.bind(this))
     })
 
     // file picker event
     document.getElementById('file-picker').addEventListener('click', async (event) => {
-      await picker.onClickSelectFile(event, this.addAudioFiles.bind(this))
+      await this.audioPicker.onClickSelectFile(event, this.addAudioFiles.bind(this))
     })
 
     // instantiate model controls
@@ -63,96 +66,85 @@ export class AudioScribe {
 
     const clearCacheButton = document.getElementById('clear-cache')
     clearCacheButton.addEventListener('click', this.clearCache.bind(this))
-
     // check cache and update controls
     this.getCacheSize().then((cacheSize) => {
       clearCacheButton.disabled = cacheSize < 1
     })
 
     document.getElementById('load-model').addEventListener('click', this.loadModel.bind(this))
+    document.getElementById('settings').addEventListener('click', this.onClickSettings.bind(this))
 
     document.getElementById('transcribe').addEventListener('click', this.transcribe.bind(this))
 
-    document.getElementById('settings').addEventListener('click', () => {
-      const tab0 = document.getElementById('tab0')
-      const tab1 = document.getElementById('tab1')
-      const tab2 = document.getElementById('tab2')
+    // remember user action on info details opening or closing
+    document.getElementById('info').addEventListener('click', (event) => { this.infoOpened = event.currentTarget.open })
 
-      if (this.settingsOpened) {
-        document.getElementById('tab-label2').classList.add('hidden')
-        document.getElementById('tab-content2').classList.add('hidden')
-        tab0.checked = this.lastTabOpened === 'tab0'
-        tab1.checked = this.lastTabOpened === 'tab1'
-        tab2.checked = false
-        this.settingsOpened = false
-      } else {        
-        document.getElementById('tab-label2').classList.remove('hidden')
-        document.getElementById('tab-content2').classList.remove('hidden')
-        this.lastTabOpened = document.querySelector('input:checked').getAttribute('id')
-        tab0.checked = false
-        tab1.checked = false
-        tab2.checked = true
-        this.settingsOpened = true
-      }
-    })
+    // check model status
+    if (!this.audioModel) {
+      this.update(STATE_DEFAULT, 'Audio model NOT loaded!')
+    }
   }
 
   update(state, message, memo) {
-    let lastState = this.state
-    this.state = state
-
     const infoDetails = document.getElementById('info')
-    const infoBody = infoDetails.querySelector('p')
+    const infoBody = document.getElementById('info-body')
+
+    if (state !== STATE_DEFAULT) {      
+      this.lastState = this.state
+      this.state = state
+      const summary = infoDetails.querySelector('summary')
+      summary.removeAttribute('class')
+    }
+
+    infoBody.textContent = infoBody.textContent.length ? `${message}\n${infoBody.textContent}` : message;
+    infoDetails.open = this.infoOpened
 
     if (state === STATE_ERROR) {
-      // TODO: expose error in info panel
+      const summary = infoDetails.querySelector('summary')
+      summary.classList.add('error')
+      summary.textContent = '⚠ ERROR'
       console.error(message);
+      return
     } else {
       console.log(message);
     }
 
-    infoBody.textContent = message
+    if (this.state === STATE_LOADING) {
+      const progress = document.querySelector('progress')
 
-    if (state == STATE_DEFAULT) {
-
-    } else if (state === STATE_LOADING) {
-      const loadingBar = document.getElementById('loading-bar')
-
-      if (lastState != appState) {
-        loadingBar.value = 0
-        loadingBar.setAttribute('style', 'visibility: visible')
-        infoDetails.open = true
+      if (this.lastState !== this.state) {
+        progress.value = 0
+        progress.setAttribute('style', 'visibility: visible')
       }
 
       if (memo?.status === 'loading') {      
-        loadingBar.value = memo.progress
+        progress.value = memo.progress
       } else if (memo?.status === 'done') {
-        loadingBar.value = 100
+        progress.value = 100
         setTimeout(() => { 
-          loadingBar.removeAttribute('style')
+          progress.removeAttribute('style')
         }, 1000)
       }
 
-    } else if (state === STATE_CHECKING) {
-      infoDetails.open = true
+    } else if (this.state === STATE_CHECKING) {
 
-    } else if (state === STATE_CLEARING) {
-      infoDetails.open = true
+    } else if (this.state === STATE_CLEARING) {
 
-    } else if (state === STATE_READY) {
-      infoDetails.open = true
-
+    } else if (this.state === STATE_READY) {
+      const summary = infoDetails.querySelector('summary')
+      summary.classList.add('ready')
+      summary.textContent = '✔ Ready'
     }
   }
 
   async loadModel(event) {
     const modelConfig = MODELS[DEFAULT_MODEL];
 
-    if (audioModel) {
-      this.update(STATE_CLEARING, 'Disposing previous model...');
-      this.audioModel.dispose();
-      // audioModel = null;
-    }
+    // if (audioModel) {
+    //   this.update(STATE_CLEARING, 'Disposing previous model...');
+    //   this.audioModel.dispose();
+    //   // audioModel = null;
+    // }
 
     try {
       let useWebGPU = !!navigator.gpu;
@@ -168,7 +160,7 @@ export class AudioScribe {
         device,
         quantization: modelConfig.quantization || null,
         progressCallback: ({ file, progress, status }) => {
-          this.update(STATE_LOADING, `Loading ${file}...`, { progress, status })
+          this.update(STATE_LOADING, status === 'done' ? 'Loading completed' : `Loading ${file}`, { progress, status })
         },
       });
 
@@ -191,6 +183,8 @@ export class AudioScribe {
       audioFile.render(file)
       inputTab.appendChild(audioFile)
     }
+
+    this.update(STATE_DEFAULT, `Loaded ${files.length} audio file(s)`)
   }
 
   async transcribe(event) {
@@ -232,13 +226,14 @@ export class AudioScribe {
 
     if (!confirmed) return;
 
-    this.update(STATE_CLEARING, 'Deleting cache...')
+    this.update(STATE_CLEARING, 'Clearing cache...')
 
     await clearModelCache();
 
     const newSize = await this.getCacheSize()
-    this.update(STATE_CLEARING, this.getCacheSizeText(newSize))
     event.currentTarget.disabled = newSize < 1
+
+    this.update(this.lastState, `Deleted ~${currentSize}MB. ${this.getCacheSizeText(newSize)} remaining.`)
   }
 
   async getCacheSize() {
@@ -258,5 +253,30 @@ export class AudioScribe {
     }
 
     return infoText
+  }
+
+  onClickSettings() {
+    const tab0 = document.getElementById('tab0')
+    const tab1 = document.getElementById('tab1')
+    const tab2 = document.getElementById('tab2')
+    const settingsLabel = document.getElementById('tab-label2')
+    const settingsContent = document.getElementById('tab-content2')
+    
+    if (this.settingsOpened) {
+      settingsLabel.classList.add('hidden')
+      settingsContent.classList.add('hidden')
+      tab0.checked = this.lastTabOpened === 'tab0'
+      tab1.checked = this.lastTabOpened === 'tab1'
+      tab2.checked = false
+      this.settingsOpened = false
+    } else {        
+      settingsLabel.classList.remove('hidden')
+      settingsContent.classList.remove('hidden')
+      this.lastTabOpened = document.querySelector('input:checked').getAttribute('id')
+      tab0.checked = false
+      tab1.checked = false
+      tab2.checked = true
+      this.settingsOpened = true
+    }
   }
 }
