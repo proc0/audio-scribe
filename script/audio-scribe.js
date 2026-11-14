@@ -81,13 +81,13 @@ export class AudioScribe {
       })
     })
 
+    // handle transcribe button
     document.getElementById('transcribe').addEventListener('click', this.transcribe.bind(this))
 
     // remember user action on info details opening or closing
     document.getElementById('info').addEventListener('click', (event) => { this.infoOpened = event.currentTarget.open })
     
-
-    document.getElementById('output-text').addEventListener('change', (event) => {
+    document.getElementById('output-text').addEventListener('keyup', (event) => {
       document.getElementById('save').disabled = event.currentTarget.value.length === 0
     })
 
@@ -192,7 +192,7 @@ export class AudioScribe {
   async addAudioFiles(files) {
     if (!files.length) return;
     
-    const inputTab = document.querySelector('#tab-content0 .tab-body')
+    const inputTab = document.getElementById('audio-files')
     inputTab.classList.remove('empty-input')
 
     for (const file of files) {

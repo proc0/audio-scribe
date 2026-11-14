@@ -72,6 +72,9 @@ export class AudioFile extends HTMLElement {
     const buttonRemove = this.querySelector('.button-remove')
     buttonRemove.addEventListener('click', () => {
       this.remove()
+      // toggle transcribe button disabled
+      document.getElementById('audio-files').classList.add('empty-input')
+      document.getElementById('transcribe').disabled = !document.querySelectorAll('audio-file').length
     })
   }
 
