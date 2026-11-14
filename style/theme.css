@@ -38,7 +38,7 @@ progress {
   box-shadow: 0.4rem 0.3rem 0.8rem rgb(14, 15, 15);
 }
 
-.icon-button:hover {
+.icon-button:hover, .highlight {
   color: rgb(117, 185, 12);
   background-color: rgb(44, 44, 55);
 }

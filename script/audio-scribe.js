@@ -88,7 +88,7 @@ export class AudioScribe {
 
     // check model status
     if (!this.audioModel) {
-      this.update(STATE_DEFAULT, 'Audio model NOT loaded!')
+      this.update(STATE_DEFAULT, 'Audio AI is not loaded. Load the model to get started.\n')
     }
   }
 
@@ -152,6 +152,7 @@ export class AudioScribe {
     //   this.audioModel.dispose();
     //   // audioModel = null;
     // }
+    document.getElementById('load-model').classList.remove('highlight')
 
     try {
       let useWebGPU = !!navigator.gpu;
@@ -177,6 +178,7 @@ export class AudioScribe {
       this.update(STATE_ERROR, `Error loading model: ${msg}`)
       this.audioModel = null;
     }
+
   }
 
   async addAudioFiles(files) {
@@ -204,25 +206,36 @@ export class AudioScribe {
     // let tokenCount = 0
     const audioFiles = document.querySelectorAll('audio-file')
 
-    const onTokenCallback = (token, tokenId) => {
-      if (token.includes('<|im_end|>') || token.includes('<|endoftext|>')) {
-        return true;
-      }
+    if (!audioFiles.length) return;
 
-      document.querySelector('#tab-content1 .tab-body').textContent = token
-      // generatedText += token;
-      // tokenCount++;
-      // const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
-      // updateSpinner(null, `${tokenCount} tokens · ${elapsed}s`);
-      return false;
-    };
+    // const onTokenCallback = (token, tokenId) => {
+    //   if (token.includes('<|im_end|>') || token.includes('<|endoftext|>')) {
+    //     return true;
+    //   }
 
-    let audioToSend = audioFiles[0].data
-    const finalText = await this.audioModel.transcribe(
-      audioToSend.audioData,
-      audioToSend.sampleRate,
-      { onToken: onTokenCallback }
-    );
+    //   // document.querySelector('#tab-content1 .tab-body').textContent = token
+    //   // generatedText += token;
+    //   // tokenCount++;
+    //   // const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+    //   // updateSpinner(null, `${tokenCount} tokens · ${elapsed}s`);
+    //   return false;
+    // };
+
+    for (const audioFile of audioFiles) {      
+      const finalText = await this.audioModel.transcribe(
+        audioFile.data.audioData,
+        audioFile.data.sampleRate);
+      //   { onToken: onTokenCallback }
+      // );
+      document.querySelector('#tab-content1 .tab-body').textContent += `${finalText}\n`
+    }
+
+    // let audioToSend = audioFiles[0].data
+    // const finalText = await this.audioModel.transcribe(
+    //   audioToSend.audioData,
+    //   audioToSend.sampleRate,
+    //   { onToken: onTokenCallback }
+    // );
   }
 
   async clearCache(event) {

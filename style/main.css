@@ -1,7 +1,7 @@
 html {
   font-family: 'Roboto', 'Arial', sans-serif;
   font-optical-sizing: auto;
-  font-size: 0.15in;
+  font-size: 0.16in;
   height: 100vh;
 }
 
@@ -37,26 +37,25 @@ header {
 h1 {
   display: flex;
   font-size: 1.5rem;
-  margin-top: 0;
-  margin-left: 2rem;
+  margin: 0 0 0.2rem 2rem;
   padding: 0;
 }
 
 details {
-  width: 66%;
+  width: 67.5%;
   display: flex;
   flex-direction: column;
   border-radius: 0.5rem;
-  padding: 1% 1% 0 1%;
 
   summary {
     font-size: 1.3rem;
   }
 
   .detail-text {
-    margin-left: 1.5rem;
     max-height: 2.5rem;
+    line-height: 1.2rem;
     overflow: hidden;
+    margin: 0.5rem 0 0 1.5rem;
   }
 
   &:hover {
@@ -79,7 +78,7 @@ menu {
   flex-direction: row;
   justify-content: space-evenly;
   align-items: flex-start;
-  padding: 0.75rem 0 2rem 0;
+  padding: 0.85rem 0 0.85rem 0;
   border-radius: 0.64rem;
 }
 
@@ -124,7 +123,7 @@ content {
   border-radius: 0.4rem;
 }
 
-.icon-button:hover {
+.icon-button:hover, .highlight {
   cursor: pointer;
 
   &::after {
@@ -132,8 +131,12 @@ content {
     font-size: 1rem;
     position: absolute;
     position-area: bottom;
-    margin-top: -0.8rem;
+    margin-top: -0.72rem;
   }
+}
+
+menu .icon-button::after {
+  margin: 0.2rem !important;
 }
 
 .icon-button:disabled, .icon-button-small:disabled {
@@ -225,6 +228,9 @@ CSS-only tabs using hidden radio buttons
   padding: 3rem 2rem 1.5rem 2.5rem;
 }
 
+#tab-content1 .tab-body {
+  white-space: pre-wrap;
+}
 /* active tab content selected via radio button checked */
 main > input#tab0:checked ~ content > #tab-content0,
 main > input#tab1:checked ~ content > #tab-content1,
