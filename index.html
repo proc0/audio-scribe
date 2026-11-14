@@ -29,7 +29,7 @@
 	<label class="error">Error! This browser does not have a compatible file system API.</label>
 </template>
 <template id="ModelControls">
-	<button class="icon-button highlight" id="load-model" data-title="Load model">𔐊</button>
+	<button class="icon-button highlight" id="load-model" data-title="Load model">𔗢</button>
 	<button class="icon-button" id="clear-cache" data-title="Clear cache">🗑</button>
 	<button class="icon-button" id="settings" data-title="Settings">⏲</button>
 </template>
@@ -39,15 +39,16 @@
 			<audio preload="auto">Your browser does not support this audio player.</audio>
 			<button class="icon-button-large button-stop hidden" title="Stop">❚❚</button>
 			<button class="icon-button-large button-play" title="Play">▶</button>
+			<span class="loader"></span>
 			<span class="time-elapsed">--:--</span><progress class="bar-progress" max="100" value="0"></progress><span class="time-remaining">--:--</span>
 			<div class="box-volume"><button class="icon-button-small button-volume">🕪</button><progress class="volume invisible" max="100" value="0"></div>
 		</div>
-		<button class="icon-button-small button-remove" title="Remove">✖</button>
+		<button class="icon-button-small button-remove" title="Remove">🗙</button>
 	</div>
 	<h3 class="audio-title"></h3>
 	<div class="audio-subtitle"></div>
 </template>
-<!-- 🗁 🗋 ⇩ ⤓ 𔐊 🗑 ✔ ✘ 🗐 ⎘ ⬚ 🖋 ⚙ 🛠 ⏲ ▶ ◼ ❚❚ 🕪 🕩-->
+<!-- 🗁 🗋 ⇩ ⤓ 𔐊 𔗢 🗑 ✔ ✘ 🗙 ✖ 🗐 ⎘ ⬚ 🖋 ⚙ 🛠 ⏲ ▶ ◼ ❚❚ 🕪 🕩-->
 <body>
 	<div class="noise-background"></div>
 	<header>
@@ -73,7 +74,7 @@
 		    <section id="tab-content0" class="tab-content">
 		    	<div class="tab-body empty-input"></div>
 		    	<div class="tab-footer">
-					<button class="icon-button" id="transcribe" data-title="Transcribe" disabled>🖋</button>
+					<button class="icon-button" id="transcribe" data-title="Transcribe" disabled>𔐊</button>
 		    	</div>
 		    </section>
 		    <section id="tab-content1" class="tab-content">
