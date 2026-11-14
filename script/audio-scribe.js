@@ -85,6 +85,14 @@ export class AudioScribe {
 
     // remember user action on info details opening or closing
     document.getElementById('info').addEventListener('click', (event) => { this.infoOpened = event.currentTarget.open })
+    
+
+    document.getElementById('output-text').addEventListener('change', (event) => {
+      document.getElementById('save').disabled = event.currentTarget.value.length === 0
+    })
+
+
+    document.getElementById('save').addEventListener('click', this.saveOutput.bind(this))
 
     // check model status
     if (!this.audioModel) {
@@ -302,5 +310,18 @@ export class AudioScribe {
       tab2.checked = true
       this.settingsOpened = true
     }
+  }
+
+  saveOutput() {
+    const text = document.getElementById('output-text').value;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'filename.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 }

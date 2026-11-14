@@ -106,6 +106,15 @@ content {
   border-radius: 0 0 0.64rem 0.64rem;
 }
 
+textarea {
+  display: flex;
+  appearance: normal;
+  resize: none;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 2rem 1.7rem;
+}
+
 .empty-input {
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1'><text x='40vw' y='70vh' fill='white' opacity='0.05' font-size='15rem'>⎘</text></svg>");
 }
@@ -130,13 +139,17 @@ content {
     content: attr(data-title);
     font-size: 1rem;
     position: absolute;
-    position-area: bottom;
+    position-area: top;
     margin-top: -0.72rem;
   }
 }
 
 menu .icon-button::after {
   margin: 0.2rem !important;
+}
+
+.tab-footer .icon-button::after {
+    position-area: bottom;
 }
 
 .icon-button:disabled, .icon-button-small:disabled {
@@ -343,6 +356,10 @@ audio-file {
     width: 12rem;
     border-radius: 1rem;
   }
+}
+
+#output-text {
+  flex-grow: 1;
 }
 
 .hidden {
