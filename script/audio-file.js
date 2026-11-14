@@ -1,9 +1,13 @@
 import { createWavBlob } from './audio-tool'
 
+const DEFAULT_VOLUME = 0.66
+
 export class AudioFile extends HTMLElement {
   data = null
   audio = null
   progressBar = null
+
+  volumeDragging = false
 
   constructor() {
     super()
@@ -24,7 +28,7 @@ export class AudioFile extends HTMLElement {
     audioSubtitle.textContent = `file size: ${fileSize} • sample size: ${audioSize} • sample rate: ${this.data.sampleRate}kHz`
 
     const audioPlayer = this.querySelector('.audio-player')
-    this.progressBar = audioPlayer.querySelector('progress')
+    this.progressBar = audioPlayer.querySelector('.bar-progress')
     this.progressBar.addEventListener('click', this.onSeek.bind(this))
 
     this.audio = audioPlayer.querySelector('audio')
@@ -34,6 +38,37 @@ export class AudioFile extends HTMLElement {
     audioPlayer.querySelector('.button-play').addEventListener('click', this.togglePlay.bind(this))
     audioPlayer.querySelector('.button-stop').addEventListener('click', this.togglePlay.bind(this))
 
+    audioPlayer.querySelector('.button-volume').addEventListener('click', (event) => {
+      const volumeBar = event.currentTarget.nextSibling
+
+      if (volumeBar.classList.contains('invisible')) {
+        volumeBar.classList.remove('invisible')
+      } else {
+        volumeBar.classList.add('invisible')
+      }
+    })
+
+    // handle changing the volume by clicking or dragging
+    const volumeBar = audioPlayer.querySelector('.volume')
+    volumeBar.addEventListener('mousedown', (event) => {
+      event.currentTarget.addEventListener('mousemove', this.onVolumeDrag)
+      this.volumeDragging = true
+    });
+    const endDragging = (e) => {
+      if (!this.volumeDragging) return;
+      this.onVolumeDrag(e)
+      volumeBar.removeEventListener('mousemove', this.onVolumeDrag)
+      this.audio.volume = (volumeBar.value / 100).toFixed(3)
+      this.volumeDragging = false
+    }
+    // remove drag handler
+    volumeBar.addEventListener('mouseup', endDragging)
+    volumeBar.addEventListener('mouseout', endDragging)
+    // init volume level
+    this.audio.volume = DEFAULT_VOLUME
+    volumeBar.value = DEFAULT_VOLUME * 100
+    
+    // handle delete audio file
     const buttonRemove = this.querySelector('.button-remove')
     buttonRemove.addEventListener('click', () => {
       this.remove()
@@ -96,6 +131,13 @@ export class AudioFile extends HTMLElement {
     this.progressBar.value = (this.audio.currentTime / this.audio.duration) * 100
     this.progressBar.previousSibling.textContent = this.formatTime(this.audio.currentTime)
     this.progressBar.nextSibling.textContent = `-${this.formatTime(this.audio.duration - this.audio.currentTime)}`
+  }
+
+  onVolumeDrag(event) {
+    const volumeBar = event.currentTarget
+    const volumeBarPos = volumeBar.getBoundingClientRect()
+    const clickPosition = (event.clientX - volumeBarPos.x) / volumeBar.offsetWidth
+    volumeBar.value = clickPosition * 100
   }
 
   changeVolume(change) {

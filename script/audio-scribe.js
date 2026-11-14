@@ -180,6 +180,8 @@ export class AudioScribe {
   }
 
   async addAudioFiles(files) {
+    if (!files.length) return;
+    
     const inputTab = document.querySelector('#tab-content0 .tab-body')
     inputTab.classList.remove('empty-input')
 
@@ -191,6 +193,9 @@ export class AudioScribe {
       inputTab.appendChild(audioFile)
     }
 
+    if (this.audioModel) {
+      document.querySelector('#transcribe').disabled = false
+    }
     this.update(STATE_DEFAULT, `Loaded ${files.length} audio file(s)`)
   }
 
@@ -272,7 +277,7 @@ export class AudioScribe {
     if (this.settingsOpened) {
       settingsLabel.classList.add('hidden')
       settingsContent.classList.add('hidden')
-      tab0.checked = this.lastTabOpened === 'tab0'
+      tab0.checked = this.lastTabOpened === 'tab0' || this.lastTabOpened === 'tab2'
       tab1.checked = this.lastTabOpened === 'tab1'
       tab2.checked = false
       this.settingsOpened = false
