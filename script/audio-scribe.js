@@ -212,12 +212,18 @@ export class AudioScribe {
   async transcribe(event) {
     const audioFiles = document.querySelectorAll('audio-file')
 
-    if (!audioFiles.length) return;
+    let totalFiles = audioFiles.length
+    if (!totalFiles) return;
 
     const outputText = document.getElementById('output-text')
     const formatText = document.getElementById('format-output-text').value
     const isValidFormat = formatText.length && formatText.includes('%RESULT%')
-    for (const audioFile of audioFiles) {  
+
+    let fileCount = 0
+    for (const audioFile of audioFiles) {
+      audioFile.startLoading()
+      audioFile.focus()
+
       try {
         const resultText = await this.audioModel.transcribe(audioFile.data.audioData, audioFile.data.sampleRate);
         
@@ -229,13 +235,18 @@ export class AudioScribe {
         }
 
         outputText.value += finalText
+        fileCount++
       } catch (error) {
         const msg = error instanceof Error ? error.message : String(error);
         this.update(STATE_ERROR, `Error transcribing audio: ${msg}`)
-      }   
+      }
+
+      this.update(STATE_LOADING, `Transcribing ${audioFile.fileInfo.name}...`, { status: 'loading', progress: Math.round((fileCount/totalFiles)*100) })
+      audioFile.endLoading(this.lastState !== STATE_ERROR)
     }
 
     // toggle save button
+    this.update(STATE_LOADING, `Transcribing completed`, { status: 'done', progress: 100 })
     document.getElementById('save').disabled = outputText.value.length === 0
 
     // NOTE: pass this to transcribe options to process each token

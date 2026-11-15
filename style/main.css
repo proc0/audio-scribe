@@ -5,7 +5,7 @@ html {
   height: 100vh;
 }
 
-body, main, menu, h3 {
+body, main, menu {
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -88,13 +88,9 @@ main {
   margin-bottom: 5rem;
 }
 
-progress {
+#loading-bar {
   width: 100%;
   height: 2px;
-  appearance: none;
-}
-
-#loading-bar {
   visibility: hidden;
   margin-bottom: 1rem;
 }
@@ -109,7 +105,6 @@ content {
 textarea {
   display: flex;
   appearance: normal;
-  resize: none;
   font-family: inherit;
   font-size: 1rem;
   padding: 2rem 1.7rem;
@@ -276,13 +271,18 @@ audio-file {
     align-items: center;
   }
 
-  .audio-title {
+  .audio-body {
     position: relative;
     font-size: 1.35rem;
     font-weight: normal;
     padding: 0.8rem 0;
     margin-bottom: 0.8rem;
     z-index: 1;
+
+    .checkmark, .batsu {
+      font-size: 2rem;
+      line-height: 1rem;
+    }
   }
 
   .audio-subtitle {
@@ -316,6 +316,7 @@ audio-file {
     progress {
       height: 1rem;
       margin: 0 1rem;
+      flex-grow: 1;
       opacity: 0.5;
       &:hover {
         cursor: pointer;
@@ -360,6 +361,7 @@ audio-file {
 
 #output-text {
   flex-grow: 1;
+  resize: none;
 }
 
 #settings {
@@ -381,22 +383,8 @@ audio-file {
   font-size: 1.4rem;
 }
 
-.loader {
-  --color-1: #fff;
-  --color-2: #ff3d00;
-  --size: 1px;
 
-  width: calc(48 * var(--size));
-  height: calc(48 * var(--size));
-  border: calc(5 * var(--size)) solid var(--color-1);
-  border-bottom-color: var(--color-2);
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-}
-
-@keyframes rotation {
+@keyframes spin {
   0% {
     transform: rotate(0deg);
   }
@@ -404,6 +392,17 @@ audio-file {
     transform: rotate(360deg);
   }
 }
+
+.spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 0.3rem solid rgb(176, 185, 175);
+  border-bottom-color: rgb(117, 185, 12);
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: spin 1s linear infinite;
+}
+
 
 /*
 audio::-webkit-media-controls-panel

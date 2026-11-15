@@ -36,7 +36,7 @@ export class AudioFile extends HTMLElement {
     const audioSize = this.formatSize(this.data.audioData.byteLength)
     // file size on disk (encoding and bit rate will vary)
     const fileSize = this.formatSize(file.size)
-    audioSubtitle.textContent = `file size: ${fileSize} • sample size: ${audioSize} • sample rate: ${this.data.sampleRate}kHz`
+    audioSubtitle.textContent = `file size: ${fileSize} • re-encoded size: ${audioSize} @ sample rate: ${this.data.sampleRate}kHz`
 
     const audioPlayer = this.querySelector('.audio-player')
     this.progressBar = audioPlayer.querySelector('.bar-progress')
@@ -156,5 +156,23 @@ export class AudioFile extends HTMLElement {
 
   changeVolume(change) {
      this.audio.volume = Math.max(0, Math.min(1, this.audio.volume + change))
+  }
+
+  startLoading() {
+    this.querySelector('.button-play').classList.add('hidden')
+    this.querySelector('.button-stop').classList.add('hidden')
+    this.querySelector('.spinner').classList.remove('hidden')
+  }
+
+  endLoading(successful = false) {
+    this.querySelector('.button-stop').classList.add('hidden')
+    this.querySelector('.spinner').classList.add('hidden')
+    this.querySelector('.button-play').classList.remove('hidden')
+
+    if (successful) {
+      this.querySelector('.checkmark').classList.remove('hidden')
+    } else {
+      this.querySelector('.batsu').classList.remove('hidden')
+    }
   }
 }
