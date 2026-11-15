@@ -70,3 +70,110 @@ export function createTestToneBlob(durationSec = 1, frequency = 440, sampleRate 
   }
   return createWavBlob(samples, sampleRate);
 }
+
+////////////
+// var dropArea = document.querySelector("#dropArea");
+
+// dropArea.addEventListener(
+//   "dragover",
+//   function(e) {
+//     e = e || event;
+//     e.preventDefault();
+//   },
+//   false
+// );
+
+// dropArea.addEventListener(
+//   "drop",
+//   function(event) {
+//     var items = event.dataTransfer.items;
+
+//     event.preventDefault();
+
+//     getFilesDataTransferItems(items).then(files => {
+//       var rawOutput = JSON.stringify(files),
+//         output = rawOutput
+//           .substring(1, rawOutput.length - 1)
+//           .replace(/},/g, "}<br/>")
+//           .replace(/\[/g, "[<div class='folder'>")
+//           .replace(/\]/g, "]</div>");
+
+//       document.querySelector("#output").innerHTML = output;
+//     });
+//   },
+//   false
+// );
+
+export async function extractAudioFiles(dataTransferItems) {
+  const traverse = (item) => {
+    return new Promise(resolve => {
+      if (item.isFile) {
+        item.file(file => {
+          if (file.type.startsWith('audio')) {
+            resolve(file)
+          }
+        })
+      } else if (item.isDirectory) {
+        let dirReader = item.createReader();
+        dirReader.readEntries(entries => {
+          const futureEntries = []
+          for (const entry of entries) {
+            futureEntries.push(traverse(entry))
+          }
+          Promise.all(futureEntries).then(files => {
+            resolve(files.flat())
+          })
+        })
+      }
+    });
+  }
+
+  const audioFiles = await new Promise(resolve => {
+    const futureItems = []
+    for (const dataTransferItem of dataTransferItems) {
+      futureItems.push(traverse(dataTransferItem.webkitGetAsEntry()))
+    }
+    Promise.all(futureItems).then(files => resolve(files.flat()))
+  })
+
+  return audioFiles
+}
+
+
+// function getFilesDataTransferItems(dataTransferItems) {
+//   function traverseFileTreePromise(item, path = "", folder) {
+//     return new Promise(resolve => {
+//       if (item.isFile) {
+//         item.file(file => {
+//           file.filepath = path || "" + file.name; //save full path
+//           folder.push(file);
+//           resolve(file);
+//         });
+//       } else if (item.isDirectory) {
+//         let dirReader = item.createReader();
+//         dirReader.readEntries(entries => {
+//           let entriesPromises = [];
+//           subfolder = [];
+//           folder.push({ name: item.name, subfolder: subfolder });
+//           for (let entr of entries)
+//             entriesPromises.push(
+//               traverseFileTreePromise(entr, path || ""  + item.name + "/", subfolder)
+//             );
+//           resolve(Promise.all(entriesPromises));
+//         });
+//       }
+//     });
+//   }
+
+//   let files = [];
+//   return new Promise((resolve, reject) => {
+//     let entriesPromises = [];
+//     for (let it of dataTransferItems)
+//       entriesPromises.push(
+//         traverseFileTreePromise(it.webkitGetAsEntry(), null, files)
+//       );
+//     Promise.all(entriesPromises).then(entries => {
+//       resolve(files);
+//     });
+//   });
+// }

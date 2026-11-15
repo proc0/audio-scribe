@@ -12,6 +12,9 @@ import {
   AudioFile
 } from './audio-file'
 import {
+  extractAudioFiles
+} from './audio-tool'
+import {
   STATE_DEFAULT,
   STATE_CHECKING,
   STATE_LOADING,
@@ -73,22 +76,7 @@ export class AudioScribe {
       event.preventDefault();
     });
 
-    inputTab.addEventListener('drop', async (event) => {
-      event.preventDefault();
-
-      if (this.state === STATE_LOADING || this.state === STATE_ERROR) return;
-
-      const files = event.dataTransfer?.files;
-      if (!files) return;
-
-      let audioFiles = []
-      for (const file of files) {
-        if (file.type.startsWith('audio/'))
-          audioFiles.push(file)
-      }
-
-      await this.addAudioFiles(audioFiles)
-    })
+    inputTab.addEventListener('drop', this.handleFileDrop.bind(this))
 
     // instantiate model controls
     let modelControlsTemplate = document.getElementById('ModelControls')
@@ -223,7 +211,6 @@ export class AudioScribe {
     if (!files.length) return;
     
     const inputTab = document.getElementById('audio-files')
-    inputTab.classList.remove('empty-input')
 
     for (const file of files) {
       const audioFile = document.createElement('audio-file')
@@ -233,9 +220,14 @@ export class AudioScribe {
       inputTab.appendChild(audioFile)
     }
 
+    if (inputTab.querySelector('audio-file').length) {
+      inputTab.classList.remove('empty-input')
+    }
+
     if (this.audioModel) {
       document.querySelector('#transcribe').disabled = false
     }
+    
     this.update(STATE_DEFAULT, `Loaded ${files.length} audio file(s)`)
   }
 
@@ -373,5 +365,25 @@ export class AudioScribe {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  }
+
+  async handleFileDrop(event) {
+    event.preventDefault();
+
+    if (this.state === STATE_LOADING || this.state === STATE_ERROR) return;
+
+    let audioFiles = []
+    if (event.dataTransfer.items) {
+      audioFiles = await extractAudioFiles(event.dataTransfer.items)
+    } else if (event.dataTransfer.files) {
+      for (const file of event.dataTransfer.files) {
+        if (file.type.startsWith('audio/'))
+          audioFiles.push(file)
+      }
+    } else {
+      this.update(STATE_ERROR, 'Unhandled drag and drop: Unrecognized file data')
+    }
+
+    await this.addAudioFiles(audioFiles)
   }
 }
