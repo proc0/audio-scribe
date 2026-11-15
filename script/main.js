@@ -10,22 +10,20 @@ import { AudioScribe } from './audio-scribe'
   let initState = STATE_CHECKING;
   let initMessage = "";
 
+  // check WebGPU availability
   if ('gpu' in navigator) {
     try {
       const adapter = await navigator.gpu.requestAdapter();
-
       if (adapter) {
         const vendor = adapter.info?.vendor ? `(${adapter.info?.vendor})` : '';
         initMessage = `WebGPU adapter found. ${vendor}`
       } else {
-        initMessage = 'WebGPU adapter not found! Using CPU. Check browser GPU settings, i.e. chrome://gpu for WebGPU status.'
+        initMessage = 'WebGPU adapter not found. Using CPU. Check browser GPU settings, i.e. chrome://gpu for WebGPU status.'
       }
-      
       initState = STATE_DEFAULT
-
     } catch (error) {
-      initMessage = `Error checking WebGPU status. ${error.message}.`
-      
+      const message = error instanceof Error ? error.message : String(error)
+      initMessage = `Error checking WebGPU status. ${message}.`
       initState = STATE_ERROR
     }
   } else {    
@@ -50,13 +48,15 @@ import { AudioScribe } from './audio-scribe'
   }
 
   const initialize = () => {
+    // expose initial app state to user in case it is an error
     AudioScribe.prototype.update.bind({ infoOpened: true })(initState, initMessage)
     
-    if (initState === STATE_ERROR) return
+    if (initState === STATE_ERROR) return;
 
     window.AudioScribe = new AudioScribe(fileAPI)
   }
 
+  // check for DOM load before init
   if (document.readyState === 'complete') {
     initialize()
   } else {
