@@ -59,6 +59,37 @@ export class AudioScribe {
       await this.audioPicker.onClickSelectFile(event, this.addAudioFiles.bind(this))
     })
 
+    document.addEventListener('dragenter', (event) => {
+      event.preventDefault();
+      if (this.state === STATE_LOADING || this.state === STATE_ERROR) return;
+    });
+
+    const inputTab = document.getElementById('audio-files')
+    inputTab.addEventListener('dragleave', (event) => {
+      event.preventDefault();
+    });
+
+    inputTab.addEventListener('dragover', (event) => {
+      event.preventDefault();
+    });
+
+    inputTab.addEventListener('drop', async (event) => {
+      event.preventDefault();
+
+      if (this.state === STATE_LOADING || this.state === STATE_ERROR) return;
+
+      const files = event.dataTransfer?.files;
+      if (!files) return;
+
+      let audioFiles = []
+      for (const file of files) {
+        if (file.type.startsWith('audio/'))
+          audioFiles.push(file)
+      }
+
+      await this.addAudioFiles(audioFiles)
+    })
+
     // instantiate model controls
     let modelControlsTemplate = document.getElementById('ModelControls')
     let modelControls = modelControlsTemplate.content.cloneNode(true)
@@ -90,7 +121,6 @@ export class AudioScribe {
     document.getElementById('output-text').addEventListener('keyup', (event) => {
       document.getElementById('save').disabled = event.currentTarget.value.length === 0
     })
-
 
     document.getElementById('save').addEventListener('click', this.saveOutput.bind(this))
 
