@@ -164,6 +164,12 @@ export class AudioFile extends HTMLElement {
     this.querySelector('.button-play').classList.add('hidden')
     this.querySelector('.button-pause').classList.add('hidden')
     this.querySelector('.spinner').classList.remove('hidden')
+    this.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'nearest'
+    });
+    this.focus()
   }
 
   endLoading(successful = false) {

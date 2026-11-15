@@ -83,19 +83,18 @@ export class AudioScribe {
     document.getElementById('load-model').addEventListener('click', this.loadModel.bind(this))
     document.getElementById('settings').addEventListener('click', this.onClickSettings.bind(this))
 
-    // tab label events to keep state
+    // track last tab to reopen when settings tab closes
     document.querySelectorAll('.tab-label').forEach((tab) => {
       tab.addEventListener('click', (event) => {
         this.lastTabOpened = event.currentTarget.getAttribute('for')
       })
     })
-    // remember user action on info details opening or closing
+    // track whether the info details was collapsed
     document.getElementById('info').addEventListener('click', (event) => { this.infoOpened = event.currentTarget.open })
     
     // handle transcribe button
     document.getElementById('transcribe').addEventListener('click', this.transcribe.bind(this))
-
-    // output tab save button
+    // handle output tab save button
     document.getElementById('output-text').addEventListener('keyup', (event) => {
       document.getElementById('save').disabled = event.currentTarget.value.length === 0
     })
@@ -202,6 +201,10 @@ export class AudioScribe {
         },
       });
 
+      if (this.audioModel) {
+        document.querySelector('#transcribe').disabled = false
+      }
+
       this.update(STATE_READY, `Audio model loaded on ${device === 'webgpu' ? 'WebGPU' : 'CPU'}`)
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -236,19 +239,23 @@ export class AudioScribe {
   }
 
   async transcribe(event) {
+    // const audioFilesContainer = document.querySelectorAll('audio-files')
     const audioFiles = document.querySelectorAll('audio-file')
 
     let totalFiles = audioFiles.length
     if (!totalFiles) return;
 
+    const transcribeButton = document.querySelector('#transcribe')
     const outputText = document.getElementById('output-text')
     const formatText = document.getElementById('format-output-text').value
     const isValidFormat = formatText.length && formatText.includes('%RESULT%')
 
+    // toggle buttons
+    transcribeButton.disabled = true
+
     let fileCount = 0
     for (const audioFile of audioFiles) {
       audioFile.startLoading()
-      audioFile.focus()
 
       try {
         const resultText = await this.audioModel.transcribe(audioFile.data.audioData, audioFile.data.sampleRate);
@@ -271,10 +278,17 @@ export class AudioScribe {
       audioFile.endLoading(this.lastState !== STATE_ERROR)
     }
 
-    // toggle save button
     this.update(STATE_LOADING, `Transcribing completed`, { status: 'done', progress: 100 })
-    document.getElementById('save').disabled = outputText.value.length === 0
 
+    // toggle buttons
+    document.getElementById('save').disabled = outputText.value.length === 0
+    transcribeButton.disabled = false
+
+    this.update(STATE_READY, `Transcribed ${fileCount} of ${totalFiles} files`)
+
+    // focus output tab
+    // document.getElementById('tab0').checked = false
+    document.getElementById('tab1').checked = true
     // NOTE: pass this to transcribe options to process each token
     // pass { onToken: onTokenCallback } into audioModel.transcribe
     // I.E.:
