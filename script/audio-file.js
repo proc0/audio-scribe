@@ -2,10 +2,19 @@ import { createWavBlob } from './audio-tool'
 
 const DEFAULT_VOLUME = 0.66
 
+class FileInfo {
+  constructor(file) {
+    this.name = file.name
+    this.path = file.webkitRelativePath
+    this.size = file.size
+  }
+}
+
 export class AudioFile extends HTMLElement {
   data = null
   audio = null
   progressBar = null
+  fileInfo = null
 
   volumeDragging = false
 
@@ -14,6 +23,8 @@ export class AudioFile extends HTMLElement {
   }
 
   render(file) {
+    this.fileInfo = new FileInfo(file)
+
     const audioTemplate = document.getElementById('audio-file').content.cloneNode(true)
     this.appendChild(audioTemplate)
 

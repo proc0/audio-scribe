@@ -210,40 +210,49 @@ export class AudioScribe {
   }
 
   async transcribe(event) {
-    // let generatedText = ''
-    // let tokenCount = 0
     const audioFiles = document.querySelectorAll('audio-file')
 
     if (!audioFiles.length) return;
 
+    const outputText = document.getElementById('output-text')
+    const formatText = document.getElementById('format-output-text').value
+    const isValidFormat = formatText.length && formatText.includes('%RESULT%')
+    for (const audioFile of audioFiles) {  
+      try {
+        const resultText = await this.audioModel.transcribe(audioFile.data.audioData, audioFile.data.sampleRate);
+        
+        let finalText = resultText
+        if (isValidFormat) {
+          finalText = formatText.replace("%RESULT%", resultText)
+          finalText = finalText.replace("%FILENAME%", audioFile.fileInfo.name)
+          finalText = finalText.replace("%FILEPATH%", audioFile.fileInfo.path)
+        }
+
+        outputText.value += finalText
+      } catch (error) {
+        const msg = error instanceof Error ? error.message : String(error);
+        this.update(STATE_ERROR, `Error transcribing audio: ${msg}`)
+      }   
+    }
+
+    // toggle save button
+    document.getElementById('save').disabled = outputText.value.length === 0
+
+    // NOTE: pass this to transcribe options to process each token
+    // pass { onToken: onTokenCallback } into audioModel.transcribe
+    // I.E.:
+    // let generatedText = ''
+    // let tokenCount = 0
     // const onTokenCallback = (token, tokenId) => {
     //   if (token.includes('<|im_end|>') || token.includes('<|endoftext|>')) {
     //     return true;
     //   }
-
-    //   // document.querySelector('#tab-content1 .tab-body').textContent = token
     //   // generatedText += token;
     //   // tokenCount++;
     //   // const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
     //   // updateSpinner(null, `${tokenCount} tokens · ${elapsed}s`);
     //   return false;
     // };
-
-    for (const audioFile of audioFiles) {      
-      const finalText = await this.audioModel.transcribe(
-        audioFile.data.audioData,
-        audioFile.data.sampleRate);
-      //   { onToken: onTokenCallback }
-      // );
-      document.querySelector('#tab-content1 .tab-body').textContent += `${finalText}\n`
-    }
-
-    // let audioToSend = audioFiles[0].data
-    // const finalText = await this.audioModel.transcribe(
-    //   audioToSend.audioData,
-    //   audioToSend.sampleRate,
-    //   { onToken: onTokenCallback }
-    // );
   }
 
   async clearCache(event) {

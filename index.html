@@ -86,7 +86,24 @@
 		    	</div>
 		    </section>
 			<section id="tab-content2" class="tab-content hidden">
-		    	<div class="tab-body">
+		    	<div id="settings" class="tab-body">
+		    		<details>
+			    		<summary>
+			    			<label for="format-output-text">Transcription formatting</label>
+			    		</summary>
+			    		<p>
+			    			Determines the surrounding text for each transcribed audio file.<br> 
+							Defaults to double newline (\n\n).<br><br>
+							Replacement tokens:<br>
+							%RESULT% -> (required) the transcribed result.<br>
+							%FILENAME% -> name of the file including extension<br>
+							%FILEPATH% -> the full path including the file name (empty on selecting from the same folder)
+			    		</p>
+		    		</details>
+<!-- using specific default format (single newline) -->
+		    		<textarea id="format-output-text">%RESULT%
+
+</textarea>
 		    	</div>
 		    	<div class="tab-footer">
 		    	</div>

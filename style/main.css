@@ -362,6 +362,12 @@ audio-file {
   flex-grow: 1;
 }
 
+#settings {
+  details {
+    margin-bottom: 1rem;
+  }
+}
+
 .hidden {
   display: none;
 }

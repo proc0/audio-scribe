@@ -8,14 +8,6 @@ function isAudioFile(fileName) {
   return AUDIO_EXTENSIONS.includes(ext);
 }
 
-class AudioFile {
-	constructor(file) {
-		this.name = file.name
-		this.path = file.path
-		this.size = file.size
-	}
-}
-
 async function* traverseSync(entry, path) {
   if (entry.kind === "file") {
     const file = await entry.getFile()
