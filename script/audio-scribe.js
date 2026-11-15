@@ -45,7 +45,7 @@ export class AudioScribe {
     // instantiate folder and file picker template
     let audioPickerTemplate = document.getElementById(fileAPI.description)
     let audioPickerElement = audioPickerTemplate.content.cloneNode(true)
-    controls.appendChild(audioPickerElement)
+    controls.prepend(audioPickerElement)
 
     // initialize appropriate file picker and bind events
     this.audioPicker = fileAPI.description == FILE_SYSTEM_FSA ? new FSAPicker : new OPFSPicker
@@ -71,11 +71,6 @@ export class AudioScribe {
       event.preventDefault();
     });
     inputTab.addEventListener('drop', this.handleFileDrop.bind(this))
-
-    // instantiate model controls
-    let modelControlsTemplate = document.getElementById('ModelControls')
-    let modelControls = modelControlsTemplate.content.cloneNode(true)
-    controls.appendChild(modelControls)
 
     // clear cache button
     const clearCacheButton = document.getElementById('clear-cache')
@@ -181,10 +176,11 @@ export class AudioScribe {
   async loadModel(event) {
     const modelConfig = MODELS[DEFAULT_MODEL];
 
-    // if (audioModel) {
+    // NOTE: this clears the model used when changing models
+    // if (this.audioModel) {
     //   this.update(STATE_CLEARING, 'Disposing previous model...');
     //   this.audioModel.dispose();
-    //   // audioModel = null;
+    //   this.audioModel = null;
     // }
     document.getElementById('load-model').classList.remove('highlight')
 
@@ -208,8 +204,8 @@ export class AudioScribe {
 
       this.update(STATE_READY, `Audio model loaded on ${device === 'webgpu' ? 'WebGPU' : 'CPU'}`)
     } catch (error) {
-      const msg = error instanceof Error ? error.message : String(error);
-      this.update(STATE_ERROR, `Error loading model: ${msg}`)
+      const message = error instanceof Error ? error.message : String(error);
+      this.update(STATE_ERROR, `Error loading model: ${message}`)
       this.audioModel = null;
     }
 
@@ -300,7 +296,7 @@ export class AudioScribe {
     if (event.currentTarget.disabled) return
 
     // confirm clear cache
-    const currentSize = await getCacheSize()
+    const currentSize = await this.getCacheSize()
     const confirmed = confirm(
       `Delete downloaded model files?\n\n` +
       `This will free ~${currentSize}MB of storage.\n` +

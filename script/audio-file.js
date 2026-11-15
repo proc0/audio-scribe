@@ -47,7 +47,7 @@ export class AudioFile extends HTMLElement {
     this.audio.addEventListener('ended', this.onEnded.bind(this))
 
     audioPlayer.querySelector('.button-play').addEventListener('click', this.togglePlay.bind(this))
-    audioPlayer.querySelector('.button-stop').addEventListener('click', this.togglePlay.bind(this))
+    audioPlayer.querySelector('.button-pause').addEventListener('click', this.togglePlay.bind(this))
 
     audioPlayer.querySelector('.button-volume').addEventListener('click', (event) => {
       const volumeBar = event.currentTarget.nextSibling
@@ -123,17 +123,17 @@ export class AudioFile extends HTMLElement {
     if (this.audio.paused) {
       this.audio.play();
       this.querySelector('.button-play').classList.add('hidden')
-      this.querySelector('.button-stop').classList.remove('hidden')
+      this.querySelector('.button-pause').classList.remove('hidden')
     } else {
       this.audio.pause();
       this.querySelector('.button-play').classList.remove('hidden')
-      this.querySelector('.button-stop').classList.add('hidden')
+      this.querySelector('.button-pause').classList.add('hidden')
     }
   }
 
   onEnded() {
     this.querySelector('.button-play').classList.remove('hidden')
-    this.querySelector('.button-stop').classList.add('hidden')
+    this.querySelector('.button-pause').classList.add('hidden')
   }
 
   onSeek(event) {
@@ -162,12 +162,12 @@ export class AudioFile extends HTMLElement {
 
   startLoading() {
     this.querySelector('.button-play').classList.add('hidden')
-    this.querySelector('.button-stop').classList.add('hidden')
+    this.querySelector('.button-pause').classList.add('hidden')
     this.querySelector('.spinner').classList.remove('hidden')
   }
 
   endLoading(successful = false) {
-    this.querySelector('.button-stop').classList.add('hidden')
+    this.querySelector('.button-pause').classList.add('hidden')
     this.querySelector('.spinner').classList.add('hidden')
     this.querySelector('.button-play').classList.remove('hidden')
 
