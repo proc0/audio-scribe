@@ -1,3 +1,4 @@
+export const DEFAULT_MODEL = 'LFM2.5-Audio-1.5B-Q4'
 // Model configurations
 export const MODELS = {
   'LFM2.5-Audio-1.5B-Q4': {
@@ -12,8 +13,6 @@ export const MODELS = {
     },
   },
 };
-
-export const DEFAULT_MODEL = 'LFM2.5-Audio-1.5B-Q4'
 
 // App States
 export const STATE_DEFAULT = 'Default'
@@ -33,12 +32,10 @@ export const AppState = Object.freeze({
 });
 
 // matches index.html template ids
-export const PICKER_NONE = 'None'
-export const PICKER_FSA = 'FileSystemAccess'
-export const PICKER_OPFS = 'OriginPrivateFileSystem'
-
-export const FilePickerAPI = Object.freeze({
-  NONE: Symbol(PICKER_NONE),
-  FSA: Symbol(PICKER_FSA),
-  OPFS: Symbol(PICKER_OPFS),
+export const FILE_SYSTEM_FSA = 'FileSystemAccess'
+export const FILE_SYSTEM_OPFS = 'OriginPrivateFileSystem'
+export const FileSystemType = Object.freeze({
+  NONE: Symbol('None'),
+  FSA: Symbol(FILE_SYSTEM_FSA),
+  OPFS: Symbol(FILE_SYSTEM_OPFS),
 });

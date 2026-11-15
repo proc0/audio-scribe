@@ -71,44 +71,13 @@ export function createTestToneBlob(durationSec = 1, frequency = 440, sampleRate 
   return createWavBlob(samples, sampleRate);
 }
 
-////////////
-// var dropArea = document.querySelector("#dropArea");
-
-// dropArea.addEventListener(
-//   "dragover",
-//   function(e) {
-//     e = e || event;
-//     e.preventDefault();
-//   },
-//   false
-// );
-
-// dropArea.addEventListener(
-//   "drop",
-//   function(event) {
-//     var items = event.dataTransfer.items;
-
-//     event.preventDefault();
-
-//     getFilesDataTransferItems(items).then(files => {
-//       var rawOutput = JSON.stringify(files),
-//         output = rawOutput
-//           .substring(1, rawOutput.length - 1)
-//           .replace(/},/g, "}<br/>")
-//           .replace(/\[/g, "[<div class='folder'>")
-//           .replace(/\]/g, "]</div>");
-
-//       document.querySelector("#output").innerHTML = output;
-//     });
-//   },
-//   false
-// );
-
+// extracts all audio files from a folder(s) using DataTransfer API
 export async function extractAudioFiles(dataTransferItems) {
   const traverse = (item) => {
     return new Promise(resolve => {
       if (item.isFile) {
         item.file(file => {
+          // NOTE: could be a filter callback
           if (file.type.startsWith('audio')) {
             resolve(file)
           }
@@ -127,7 +96,8 @@ export async function extractAudioFiles(dataTransferItems) {
       }
     });
   }
-
+  // using DataTransferItem: webkitGetAsEntry() method
+  // NOTE: it may be renamed to getAsEntry() in the future
   const audioFiles = await new Promise(resolve => {
     const futureItems = []
     for (const dataTransferItem of dataTransferItems) {
@@ -138,42 +108,3 @@ export async function extractAudioFiles(dataTransferItems) {
 
   return audioFiles
 }
-
-
-// function getFilesDataTransferItems(dataTransferItems) {
-//   function traverseFileTreePromise(item, path = "", folder) {
-//     return new Promise(resolve => {
-//       if (item.isFile) {
-//         item.file(file => {
-//           file.filepath = path || "" + file.name; //save full path
-//           folder.push(file);
-//           resolve(file);
-//         });
-//       } else if (item.isDirectory) {
-//         let dirReader = item.createReader();
-//         dirReader.readEntries(entries => {
-//           let entriesPromises = [];
-//           subfolder = [];
-//           folder.push({ name: item.name, subfolder: subfolder });
-//           for (let entr of entries)
-//             entriesPromises.push(
-//               traverseFileTreePromise(entr, path || ""  + item.name + "/", subfolder)
-//             );
-//           resolve(Promise.all(entriesPromises));
-//         });
-//       }
-//     });
-//   }
-
-//   let files = [];
-//   return new Promise((resolve, reject) => {
-//     let entriesPromises = [];
-//     for (let it of dataTransferItems)
-//       entriesPromises.push(
-//         traverseFileTreePromise(it.webkitGetAsEntry(), null, files)
-//       );
-//     Promise.all(entriesPromises).then(entries => {
-//       resolve(files);
-//     });
-//   });
-// }

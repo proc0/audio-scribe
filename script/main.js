@@ -2,14 +2,13 @@ import {
   STATE_CHECKING,
   STATE_DEFAULT,
   STATE_ERROR,
-  FilePickerAPI,
+  FileSystemType,
 } from './const'
 import { AudioScribe } from './audio-scribe'
 
 (async () => {
   let initState = STATE_CHECKING;
   let initMessage = "";
-  let fileAcessAPI = FilePickerAPI.NONE;
 
   if ('gpu' in navigator) {
     try {
@@ -34,14 +33,15 @@ import { AudioScribe } from './audio-scribe'
     initMessage = 'WebGPU adapter not found. Using CPU (WASM). Check browser GPU settings, i.e. chrome://flags/#enable-unsafe-webgpu'
   }
 
+  let fileAPI = FileSystemType.NONE;
   // check which file picker type the browser supports
   if (initState === STATE_DEFAULT) {    
     if (window.showDirectoryPicker && typeof window.showDirectoryPicker === 'function') {
       // File System Access is supported by Chromium browsers
-      fileAcessAPI = FilePickerAPI.FSA
+      fileAPI = FileSystemType.FSA
     } else if (navigator?.storage && 'getDirectory' in navigator.storage) {
       // Origin Private File System is supported by most other browsers
-      fileAcessAPI = FilePickerAPI.OPFS
+      fileAPI = FileSystemType.OPFS
     } else {
       // abort if no available file picker in browser
       initState = STATE_ERROR 
@@ -54,7 +54,7 @@ import { AudioScribe } from './audio-scribe'
     
     if (initState === STATE_ERROR) return
 
-    window.AudioScribe = new AudioScribe(fileAcessAPI)
+    window.AudioScribe = new AudioScribe(fileAPI)
   }
 
   if (document.readyState === 'complete') {

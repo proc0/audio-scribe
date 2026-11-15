@@ -22,8 +22,7 @@ import {
   STATE_READY,
   STATE_ERROR,
   AppState,
-  PICKER_NONE,
-  PICKER_FSA,
+  FILE_SYSTEM_FSA,
   MODELS,
   DEFAULT_MODEL,
 } from './const'
@@ -41,7 +40,6 @@ export class AudioScribe {
   constructor(fileAPI) {
     // define custom elements
     customElements.define('audio-file', AudioFile)
-    // customElements.define('input-view', InputView)
 
     const controls = document.getElementById('controls')
     // instantiate folder and file picker template
@@ -50,32 +48,28 @@ export class AudioScribe {
     controls.appendChild(audioPickerElement)
 
     // initialize appropriate file picker and bind events
-    this.audioPicker = fileAPI.description == PICKER_FSA ? new FSAPicker : new OPFSPicker
-
+    this.audioPicker = fileAPI.description == FILE_SYSTEM_FSA ? new FSAPicker : new OPFSPicker
     // folder picker event
     document.getElementById('folder-picker').addEventListener('click', async (event) => {
       await this.audioPicker.onClickSelectFolder(event, this.addAudioFiles.bind(this))
     })
-
     // file picker event
     document.getElementById('file-picker').addEventListener('click', async (event) => {
       await this.audioPicker.onClickSelectFile(event, this.addAudioFiles.bind(this))
     })
 
+    // drag and drop files and folders
     document.addEventListener('dragenter', (event) => {
       event.preventDefault();
       if (this.state === STATE_LOADING || this.state === STATE_ERROR) return;
     });
-
     const inputTab = document.getElementById('audio-files')
     inputTab.addEventListener('dragleave', (event) => {
       event.preventDefault();
     });
-
     inputTab.addEventListener('dragover', (event) => {
       event.preventDefault();
     });
-
     inputTab.addEventListener('drop', this.handleFileDrop.bind(this))
 
     // instantiate model controls
@@ -83,13 +77,14 @@ export class AudioScribe {
     let modelControls = modelControlsTemplate.content.cloneNode(true)
     controls.appendChild(modelControls)
 
+    // clear cache button
     const clearCacheButton = document.getElementById('clear-cache')
     clearCacheButton.addEventListener('click', this.clearCache.bind(this))
     // check cache and update controls
     this.getCacheSize().then((cacheSize) => {
       clearCacheButton.disabled = cacheSize < 1
     })
-
+    // load model and settings
     document.getElementById('load-model').addEventListener('click', this.loadModel.bind(this))
     document.getElementById('settings').addEventListener('click', this.onClickSettings.bind(this))
 
@@ -99,17 +94,16 @@ export class AudioScribe {
         this.lastTabOpened = event.currentTarget.getAttribute('for')
       })
     })
-
-    // handle transcribe button
-    document.getElementById('transcribe').addEventListener('click', this.transcribe.bind(this))
-
     // remember user action on info details opening or closing
     document.getElementById('info').addEventListener('click', (event) => { this.infoOpened = event.currentTarget.open })
     
+    // handle transcribe button
+    document.getElementById('transcribe').addEventListener('click', this.transcribe.bind(this))
+
+    // output tab save button
     document.getElementById('output-text').addEventListener('keyup', (event) => {
       document.getElementById('save').disabled = event.currentTarget.value.length === 0
     })
-
     document.getElementById('save').addEventListener('click', this.saveOutput.bind(this))
 
     // check model status
@@ -133,7 +127,9 @@ export class AudioScribe {
     infoDetails.open = this.infoOpened
 
     if (state === STATE_ERROR) {
+      // TODO: refactor updating info title
       const summary = infoDetails.querySelector('summary')
+      summary.removeAttribute('class')
       summary.classList.add('error')
       summary.textContent = '⚠ ERROR'
       console.error(message);
@@ -148,6 +144,10 @@ export class AudioScribe {
       if (this.lastState !== this.state) {
         progress.value = 0
         progress.setAttribute('style', 'visibility: visible')
+        // TODO: refactor updating info title
+        const summary = infoDetails.querySelector('summary')
+        summary.removeAttribute('class')
+        summary.textContent = '🛈 Info'
       }
 
       if (memo?.status === 'loading') {      
@@ -160,11 +160,19 @@ export class AudioScribe {
       }
 
     } else if (this.state === STATE_CHECKING) {
-
-    } else if (this.state === STATE_CLEARING) {
-
-    } else if (this.state === STATE_READY) {
+      // TODO: refactor updating info title
       const summary = infoDetails.querySelector('summary')
+      summary.removeAttribute('class')
+      summary.textContent = '🛈 Info'
+    } else if (this.state === STATE_CLEARING) {
+      // TODO: refactor updating info title
+      const summary = infoDetails.querySelector('summary')
+      summary.removeAttribute('class')
+      summary.textContent = '🛈 Info'
+    } else if (this.state === STATE_READY) {
+      // TODO: refactor updating info title
+      const summary = infoDetails.querySelector('summary')
+      summary.removeAttribute('class')
       summary.classList.add('ready')
       summary.textContent = '✔ Ready'
     }
@@ -220,14 +228,14 @@ export class AudioScribe {
       inputTab.appendChild(audioFile)
     }
 
-    if (inputTab.querySelector('audio-file').length) {
+    if (inputTab.querySelector('audio-file')) {
       inputTab.classList.remove('empty-input')
     }
 
     if (this.audioModel) {
       document.querySelector('#transcribe').disabled = false
     }
-    
+
     this.update(STATE_DEFAULT, `Loaded ${files.length} audio file(s)`)
   }
 
