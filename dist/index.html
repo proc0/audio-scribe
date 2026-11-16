@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="black" media="(prefers-color-scheme: dark)" />
+	<meta name="description" content="ASR speech to audio transcription" />
+	<title>Audio Scribe</title>
+	<link rel="icon" type="image/x-icon" href="/audio-scribe/assets/favicon-M2oofDoK.ico" sizes="any" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" />
+  <script type="module" crossorigin src="/audio-scribe/assets/index-j82UA2qe.js"></script>
+  <link rel="stylesheet" crossorigin href="/audio-scribe/assets/index-RnxlQAKb.css">
+</head>
+<template id="FileSystemAccess">
+	<button class="icon-button icon-adjust" id="folder-picker" data-title="Select folder">🗁</button>
+	<button class="icon-button" id="file-picker" data-title="Select files">🗋</button>
+</template>
+<template id="OriginPrivateFileSystem">
+	<button class="icon-button icon-adjust" id="folder-picker" data-title="Select folder">🗁</button>
+	<input type="file" id="input-folder-picker" webkitdirectory directory multiple style="display: none"/>
+	
+	<button class="icon-button" id="file-picker" data-title="Select files">🗋</button>
+	<input type="file" id="input-file-picker" multiple style="display: none"/>
+</template>
+<template id="None">
+	<label class="error">Error! This browser does not have a compatible file system API.</label>
+</template>
+<template id="audio-file">
+	<div class="audio-header hidden">
+		<div class="audio-player">
+			<audio preload="auto">Your browser does not support this audio player.</audio>
+			<button class="icon-button-large button-pause hidden" title="Pause">❚❚</button>
+			<button class="icon-button-large button-play" title="Play">▶</button>
+			<span class="spinner hidden"></span>
+			<span class="time-elapsed">--:--</span><progress class="bar-progress" max="100" value="0"></progress><span class="time-remaining">--:--</span>
+			<div class="box-volume"><button class="icon-button-small button-volume">🕪</button><progress class="volume invisible" max="100" value="0"></div>
+		</div>
+		<button class="icon-button-small button-remove" title="Remove">🗙</button>
+	</div>
+	<div class="audio-body">
+		<button class="icon-button-large open-player" title="Play">▶</button>
+		<span class="spinner hidden"></span>
+		<div class="audio-title">
+			<span class="title-text"></span>
+			<span class="checkmark hidden">✔</span>
+			<span class="batsu hidden">✖</span>
+		</div>
+		<button class="icon-button-small button-remove" title="Remove">🗙</button>
+	</div>
+	<span class="audio-subtitle"></span>
+</template>
+<template id="quick-start">
+	<div class="quick-start">
+		<h2>Quick Start</h2>
+		<p>To get started do this:</p>
+		<ol>
+			<li>one step</li>
+			<li>two step</li>
+			<li>three step</li>
+		</ol>
+		<p>Don't forget to do this.</p>
+	</div>
+</template>
+<!-- 🗁 🗋 ⇩ ⤓ 𔐊 𔗢 🗑 🗒 ✔ 🗙 ✖ 🗐 ⎘ ⬚ 🖋 ⚙ 🛠 ⏲ ▶ ◼ ❚❚ 🕪 🕩-->
+<body>
+	<div class="noise-background"></div>
+	<header>
+		<h1>🖋 Audio Scribe</h1>
+		<div style="display: flex; flex-grow: 1"></div>
+		<div id="quick-info">
+	  		<span class="icon-button-large">🛈</span>
+	  		<div id="quick-info-body"></div>
+		</div>
+		<a href="https://github.com/proc0/audio-scribe" title="Github" target="_blank">
+			<svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-mark-github" viewBox="0 0 24 24" width="32" height="32" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M10.226 17.284c-2.965-.36-5.054-2.493-5.054-5.256 0-1.123.404-2.336 1.078-3.144-.292-.741-.247-2.314.09-2.965.898-.112 2.111.36 2.83 1.01.853-.269 1.752-.404 2.853-.404 1.1 0 1.999.135 2.807.382.696-.629 1.932-1.1 2.83-.988.315.606.36 2.179.067 2.942.72.854 1.101 2 1.101 3.167 0 2.763-2.089 4.852-5.098 5.234.763.494 1.28 1.572 1.28 2.807v2.336c0 .674.561 1.056 1.235.786 4.066-1.55 7.255-5.615 7.255-10.646C23.5 6.188 18.334 1 11.978 1 5.62 1 .5 6.188.5 12.545c0 4.986 3.167 9.12 7.435 10.669.606.225 1.19-.18 1.19-.786V20.63a2.9 2.9 0 0 1-1.078.224c-1.483 0-2.359-.808-2.987-2.313-.247-.607-.517-.966-1.034-1.033-.27-.023-.359-.135-.359-.27 0-.27.45-.471.898-.471.652 0 1.213.404 1.797 1.235.45.651.921.943 1.483.943.561 0 .92-.202 1.437-.719.382-.381.674-.718.944-.943"></path></svg>
+		</a>
+	</header>
+	<details id="info">
+	  <summary>🛈 Info</summary>
+	  <p id="info-body" class="detail-text"></p>
+	</details>
+	<menu id="controls">
+		<button class="icon-button highlight" id="load-model" data-title="Load model">𔗢</button>
+		<button class="icon-button" id="clear-cache" data-title="Clear cache">🗑</button>
+		<button class="icon-button" id="settings" data-title="Settings">⏲</button>
+	</menu>
+	<main>
+		<progress id="loading-bar" max="100" value="0"></progress>
+		<!-- main content tabs -->
+		<input type="radio" name="tabset" id="tab0" class="tab-input" aria-controls="tab-content0" checked>
+		<input type="radio" name="tabset" id="tab1" class="tab-input" aria-controls="tab-content1">
+		<input type="radio" name="tabset" id="tab2" class="tab-input" aria-controls="tab-content2">
+		<div id="tab-labels">
+			<label for="tab0" id="tab-label0" class="tab-label">INPUT</label>
+			<label for="tab1" id="tab-label1" class="tab-label">OUTPUT</label>
+			<label for="tab2" id="tab-label2" class="tab-label hidden">SETTINGS</label>
+		</div>
+		<content id="tab-contents" class="noise-animated">
+		    <section id="tab-content0" class="tab-content">
+		    	<div id="audio-files" class="tab-body empty-input"></div>
+		    	<div class="tab-footer">
+					<button class="icon-button" id="clear-input" data-title="Clear input" disabled>🗑</button>
+					<button class="icon-button" id="transcribe" data-title="Transcribe" disabled>𔐊</button>
+		    	</div>
+		    </section>
+		    <section id="tab-content1" class="tab-content">
+		    	<div class="tab-body">
+		    		<textarea id="output-text"></textarea>
+		    	</div>
+		    	<div class="tab-footer">
+					<button class="icon-button" id="copy" data-title="Copy" disabled>🗒</button>
+					<button class="icon-button" id="save" data-title="Save" disabled>🖫</button>
+		    	</div>
+		    </section>
+			<section id="tab-content2" class="tab-content hidden">
+		    	<div id="settings" class="tab-body">
+		    		<details>
+			    		<summary>
+			    			<label for="settings-file-name">Output file name</label>
+			    		</summary>
+			    		<p> The name of the file when saving the output text.<br><br> 
+							Replacement tokens:<br>
+							%TIMESTAMP% -> the time of transcription
+			    		</p>
+		    		</details>
+		    		<input type="text" id="settings-file-name" placeholder="audio-scribe-%TIMESTAMP%.txt"></input>
+		    		<details>
+			    		<summary>
+			    			<label for="format-output-text">Transcription formatting</label>
+			    		</summary>
+			    		<p>
+			    			Determines the surrounding text for each transcribed audio file.<br> 
+							Defaults to double newline (\n\n).<br><br>
+							Replacement tokens:<br>
+							%RESULT% -> (required) the transcribed result.<br>
+							%FILENAME% -> name of the file including extension<br>
+							%FILEPATH% -> the full path including the file name (empty on selecting from the same folder)
+			    		</p>
+		    		</details>
+<!-- using specific default format (single newline) -->
+		    		<textarea id="format-output-text">%RESULT%
+
+</textarea>
+		    		<details style="margin-top: 1rem" open>
+			    		<summary>
+			    			<label>AI Model Info</label>
+			    		</summary>
+			    		<p> Audio transcription is done by <a href="https://www.liquid.ai/blog/lfm2-audio-an-end-to-end-audio-foundation-model" target="_blank">Liquid AI LFM2.5-Audio-1.5B-Q4</a>.<br>The model is downloaded from <a href="https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B-ONNX/" target="_blank">Hugging Face</a>.
+			    		</p>
+		    		</details>
+		    	</div>
+		    	<div class="tab-footer">
+		    	</div>
+		    </section>
+		</content>
+	</main>
+	<footer></footer>
+</body>
+</html>
