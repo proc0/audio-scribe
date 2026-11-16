@@ -46,6 +46,12 @@ export class AudioFile extends HTMLElement {
     this.audio.addEventListener('timeupdate', this.onTimeUpdate.bind(this))
     this.audio.addEventListener('ended', this.onEnded.bind(this))
 
+    this.querySelector('.open-player').addEventListener('click', (event) => {
+      event.currentTarget.classList.add('hidden')
+      this.querySelector('.audio-body .button-remove').classList.add('hidden')
+      this.querySelector('.audio-header').classList.remove('hidden')
+      this.togglePlay()
+    })
     audioPlayer.querySelector('.button-play').addEventListener('click', this.togglePlay.bind(this))
     audioPlayer.querySelector('.button-pause').addEventListener('click', this.togglePlay.bind(this))
 
@@ -80,8 +86,10 @@ export class AudioFile extends HTMLElement {
     volumeBar.value = DEFAULT_VOLUME * 100
     
     // handle delete audio file
-    const buttonRemove = this.querySelector('.button-remove')
-    buttonRemove.addEventListener('click', this.delete.bind(this))
+    const headerRemove = this.querySelector('.audio-header .button-remove')
+    headerRemove.addEventListener('click', this.delete.bind(this))
+    const bodyRemove = this.querySelector('.audio-body .button-remove')
+    bodyRemove.addEventListener('click', this.delete.bind(this))
   }
 
   formatSize(bytes) {

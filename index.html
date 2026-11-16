@@ -29,7 +29,7 @@
 	<label class="error">Error! This browser does not have a compatible file system API.</label>
 </template>
 <template id="audio-file">
-	<div class="audio-header">
+	<div class="audio-header hidden">
 		<div class="audio-player">
 			<audio preload="auto">Your browser does not support this audio player.</audio>
 			<button class="icon-button-large button-pause hidden" title="Pause">❚❚</button>
@@ -41,9 +41,11 @@
 		<button class="icon-button-small button-remove" title="Remove">🗙</button>
 	</div>
 	<div class="audio-body">
+		<button class="icon-button-large open-player" title="Play">▶</button>
 		<span class="checkmark hidden">✔</span>
 		<span class="batsu hidden">✖</span>
 		<span class="audio-title"></span>
+		<button class="icon-button-small button-remove" title="Remove">🗙</button>
 	</div>
 	<span class="audio-subtitle"></span>
 </template>

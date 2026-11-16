@@ -266,7 +266,7 @@ main > input#tab2:checked ~ content > #tab-content2 {
 audio-file {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 2rem 1.5rem 1.5rem;
+  padding: 0rem 1rem 1.5rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 1rem;
 
@@ -275,19 +275,31 @@ audio-file {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-top: 0.6rem;
   }
 
   .audio-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: relative;
     font-size: 1.35rem;
     font-weight: normal;
-    padding: 0.8rem 0;
     margin-bottom: 0.8rem;
     z-index: 1;
 
     .checkmark, .batsu {
       font-size: 2rem;
       line-height: 1rem;
+    }
+
+    .open-player {
+      padding: 0;
+    }
+
+    .audio-title {
+      flex-grow: 1;
+      margin: 0.5rem 0 0.5rem 0.5rem;
     }
   }
 
@@ -383,7 +395,7 @@ audio-file {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .invisible {
