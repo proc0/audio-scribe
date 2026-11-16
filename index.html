@@ -47,7 +47,7 @@
 	</div>
 	<span class="audio-subtitle"></span>
 </template>
-<!-- 🗁 🗋 ⇩ ⤓ 𔐊 𔗢 🗑 ✔ 🗙 ✖ 🗐 ⎘ ⬚ 🖋 ⚙ 🛠 ⏲ ▶ ◼ ❚❚ 🕪 🕩-->
+<!-- 🗁 🗋 ⇩ ⤓ 𔐊 𔗢 🗑 🗒 ✔ 🗙 ✖ 🗐 ⎘ ⬚ 🖋 ⚙ 🛠 ⏲ ▶ ◼ ❚❚ 🕪 🕩-->
 <body>
 	<div class="noise-background"></div>
 	<header>
@@ -81,6 +81,7 @@
 		    <section id="tab-content0" class="tab-content">
 		    	<div id="audio-files" class="tab-body empty-input"></div>
 		    	<div class="tab-footer">
+					<button class="icon-button" id="clear-input" data-title="Clear input">🗑</button>
 					<button class="icon-button" id="transcribe" data-title="Transcribe" disabled>𔐊</button>
 		    	</div>
 		    </section>
@@ -89,11 +90,22 @@
 		    		<textarea id="output-text"></textarea>
 		    	</div>
 		    	<div class="tab-footer">
+					<button class="icon-button" id="copy" data-title="Copy">🗒</button>
 					<button class="icon-button" id="save" data-title="Save" disabled>🖫</button>
 		    	</div>
 		    </section>
 			<section id="tab-content2" class="tab-content hidden">
 		    	<div id="settings" class="tab-body">
+		    		<details>
+			    		<summary>
+			    			<label for="settings-file-name">Output file name</label>
+			    		</summary>
+			    		<p> The name of the file when saving the output text.<br><br> 
+							Replacement tokens:<br>
+							%TIMESTAMP% -> the time of transcription
+			    		</p>
+		    		</details>
+		    		<input type="text" id="settings-file-name" placeholder="audio-scribe-%TIMESTAMP%.txt"></input>
 		    		<details>
 			    		<summary>
 			    			<label for="format-output-text">Transcription formatting</label>

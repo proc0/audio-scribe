@@ -286,9 +286,10 @@ export class AudioScribe {
 
     this.update(STATE_READY, `Transcribed ${fileCount} of ${totalFiles} files`)
 
+    outputText.setAttribute('data-timestamp', (new Date()).toISOString())
     // focus output tab
-    // document.getElementById('tab0').checked = false
     document.getElementById('tab1').checked = true
+
     // NOTE: pass this to transcribe options to process each token
     // pass { onToken: onTokenCallback } into audioModel.transcribe
     // I.E.:
@@ -374,11 +375,14 @@ export class AudioScribe {
 
   saveOutput() {
     const text = document.getElementById('output-text').value;
+    const timestamp = document.getElementById('output-text').getAttribute('data-timestamp');
+    const filename = document.getElementById('settings-file-name').value || document.getElementById('settings-file-name').placeholder
     const blob = new Blob([text], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'filename.txt';
+
+    a.download = filename.includes('.txt') ? filename.replace('%TIMESTAMP%', timestamp) : `${filename.replace('%TIMESTAMP%', timestamp)}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

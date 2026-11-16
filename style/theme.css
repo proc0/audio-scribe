@@ -32,8 +32,9 @@ progress {
   background-color: rgb(147, 205, 12);
 }
 
-textarea {
+textarea, input[type="text"] {
   color: inherit;
+  border: none;
   background-color: rgb(41, 40, 40);
   box-shadow: inset 0.2rem -0.3rem 1rem rgb(14, 15, 15);
 
@@ -41,6 +42,11 @@ textarea {
     outline: none;
     border: 1px solid rgb(117, 185, 12);
   }
+}
+
+input[type="text"] {
+  box-shadow: inset 0.1rem -0.2rem 0.5rem rgb(14, 15, 15);
+
 }
 
 .icon-button, audio-file {
