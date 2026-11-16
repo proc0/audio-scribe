@@ -331,7 +331,7 @@ export class AudioScribe {
     const currentSize = await this.getCacheSize()
     const confirmed = confirm(
       `Delete downloaded model files?\n\n` +
-      `This will free ~${currentSize}MB of storage.\n` +
+      `This will free ${this.getCacheSizeText(currentSize)} of cache.\n` +
       `Models will be need to be downloaded again.`
     )
 
@@ -343,12 +343,29 @@ export class AudioScribe {
       this.audioModel.dispose()
     }
 
+    // clear onnx-models cache and indexedDB
     await clearModelCache();
+
+    // clear transformers-cache
+    if ('caches' in window) {
+      const keys = await window.caches.keys()
+      for (const key of keys) {
+        if (key === 'transformers-cache') {
+          try {
+            await window.caches.delete(key)
+          } catch (error) {
+            const msg = error instanceof Error ? error.message : String(error);
+            this.update(STATE_ERROR, `Error deleting cache: ${msg}`)
+          }
+          break;
+        }
+      }
+    }
 
     const newSize = await this.getCacheSize()
     event.target.disabled = newSize < 1
 
-    this.update(this.lastState, `Deleted ${this.getCacheSizeText(newSize)}. ${this.getCacheSizeText(newSize)} remains.`)
+    this.update(this.lastState, `Cache cleared successfully. Deleted ${this.getCacheSizeText(currentSize)}.`)
   }
 
   async getCacheSize() {
