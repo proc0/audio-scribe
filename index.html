@@ -10,8 +10,8 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" />
-  <script type="module" crossorigin src="/audio-scribe/assets/index-j82UA2qe.js"></script>
-  <link rel="stylesheet" crossorigin href="/audio-scribe/assets/index-RnxlQAKb.css">
+  <script type="module" crossorigin src="/audio-scribe/assets/index-pyhFltXF.js"></script>
+  <link rel="stylesheet" crossorigin href="/audio-scribe/assets/index-D2sMVivs.css">
 </head>
 <template id="FileSystemAccess">
 	<button class="icon-button icon-adjust" id="folder-picker" data-title="Select folder">🗁</button>
@@ -54,13 +54,13 @@
 <template id="quick-start">
 	<div class="quick-start">
 		<h2>Quick Start</h2>
-		<p>To get started do this:</p>
+		<p>Speech to text from multiple audio files:</p>
 		<ol>
-			<li>one step</li>
-			<li>two step</li>
-			<li>three step</li>
+			<li><b>Load</b> the AI audio model*.</li>
+			<li>Add audio files or folders (with audio files).</li>
+			<li><b>Transcribe</b>, review, and <b>Save</b>.</li>
 		</ol>
-		<p>Don't forget to do this.</p>
+		<p>*Note: Model is ~2GB first time only,<br>and cached for future use, but needs to<br>be loaded every time the page reloads.<br>See <a href="https://github.com/proc0/audio-scribe" title="Github" target="_blank">Readme in Github</a> for more info.</p>
 	</div>
 </template>
 <!-- 🗁 🗋 ⇩ ⤓ 𔐊 𔗢 🗑 🗒 ✔ 🗙 ✖ 🗐 ⎘ ⬚ 🖋 ⚙ 🛠 ⏲ ▶ ◼ ❚❚ 🕪 🕩-->
@@ -73,7 +73,7 @@
 	  		<span class="icon-button-large">🛈</span>
 	  		<div id="quick-info-body"></div>
 		</div>
-		<a href="https://github.com/proc0/audio-scribe" title="Github" target="_blank">
+		<a class="icon-link" href="https://github.com/proc0/audio-scribe" title="Github" target="_blank">
 			<svg data-component="Octicon" aria-hidden="true" focusable="false" class="octicon octicon-mark-github" viewBox="0 0 24 24" width="32" height="32" fill="currentColor" display="inline-block" overflow="visible" style="vertical-align:text-bottom"><path d="M10.226 17.284c-2.965-.36-5.054-2.493-5.054-5.256 0-1.123.404-2.336 1.078-3.144-.292-.741-.247-2.314.09-2.965.898-.112 2.111.36 2.83 1.01.853-.269 1.752-.404 2.853-.404 1.1 0 1.999.135 2.807.382.696-.629 1.932-1.1 2.83-.988.315.606.36 2.179.067 2.942.72.854 1.101 2 1.101 3.167 0 2.763-2.089 4.852-5.098 5.234.763.494 1.28 1.572 1.28 2.807v2.336c0 .674.561 1.056 1.235.786 4.066-1.55 7.255-5.615 7.255-10.646C23.5 6.188 18.334 1 11.978 1 5.62 1 .5 6.188.5 12.545c0 4.986 3.167 9.12 7.435 10.669.606.225 1.19-.18 1.19-.786V20.63a2.9 2.9 0 0 1-1.078.224c-1.483 0-2.359-.808-2.987-2.313-.247-.607-.517-.966-1.034-1.033-.27-.023-.359-.135-.359-.27 0-.27.45-.471.898-.471.652 0 1.213.404 1.797 1.235.45.651.921.943 1.483.943.561 0 .92-.202 1.437-.719.382-.381.674-.718.944-.943"></path></svg>
 		</a>
 	</header>
@@ -147,7 +147,7 @@
 			    		<summary>
 			    			<label>AI Model Info</label>
 			    		</summary>
-			    		<p> Audio transcription is done by <a href="https://www.liquid.ai/blog/lfm2-audio-an-end-to-end-audio-foundation-model" target="_blank">Liquid AI LFM2.5-Audio-1.5B-Q4</a>.<br>The model is downloaded from <a href="https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B-ONNX/" target="_blank">Hugging Face</a>.
+			    		<p> Audio transcription is done by <a href="https://www.liquid.ai/blog/lfm2-audio-an-end-to-end-audio-foundation-model" target="_blank">Liquid AI LFM2.5-Audio-1.5B-Q4</a>.<br>The model is downloaded from <a href="https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B-ONNX/" target="_blank">Hugging Face</a>.<br>See <a href="https://github.com/proc0/audio-scribe" title="Github" target="_blank">Readme in Github</a> for more info.</p>
 			    		</p>
 		    		</details>
 		    	</div>
