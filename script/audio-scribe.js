@@ -106,6 +106,10 @@ export class AudioScribe {
     if (!this.audioModel) {
       this.update(STATE_DEFAULT, 'Audio AI is not loaded. Load the model to get started.\n')
     }
+
+    const quickStart = document.getElementById('quick-start')
+    document.getElementById('audio-files').append(quickStart.content.cloneNode(true))
+    document.getElementById('quick-info-body').append(quickStart.content.cloneNode(true))
   }
 
   update(state, message, memo) {
@@ -183,7 +187,9 @@ export class AudioScribe {
     //   this.audioModel.dispose();
     //   this.audioModel = null;
     // }
-    document.getElementById('load-model').classList.remove('highlight')
+    const loadModelButton = document.getElementById('load-model')
+    loadModelButton.classList.remove('highlight')
+    loadModelButton.disabled = true
 
     try {
       let useWebGPU = !!navigator.gpu;
@@ -208,6 +214,7 @@ export class AudioScribe {
       }
 
       this.update(STATE_READY, `Audio model loaded on ${device === 'webgpu' ? 'WebGPU' : 'CPU'}`)
+
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       this.update(STATE_ERROR, `Error loading model: ${message}`)
@@ -230,6 +237,7 @@ export class AudioScribe {
     }
 
     if (inputTab.querySelector('audio-file')) {
+      inputTab.querySelector('.quick-start').remove()
       inputTab.classList.remove('empty-input')
     }
 

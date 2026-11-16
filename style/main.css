@@ -17,6 +17,31 @@ body {
   padding: 0;
 }
 
+#quick-info-body, .quick-start {
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 0;
+
+  h2 {
+    margin: 0;
+    padding: 0;
+  }
+
+  ol, ul, li {
+    margin: 0;
+  }
+
+  ol, ul {
+    padding-left: 1.3rem;
+  }
+}
+
+#audio-files .quick-start {
+  font-size: 1.2rem;
+  margin: 1rem 0 0 2rem;
+}
+
 header {
   width: stretch;
   display: flex;
@@ -24,11 +49,36 @@ header {
   justify-content: space-between;
   align-items: start;
   padding: 0;
-  margin: 1rem 1rem 0;
+  margin: 1rem 2rem 0;
 
   a {
     display: flex;
     color: inherit;
+  }
+
+  #quick-info {
+    margin-right: 1rem;
+
+    .icon-button-large {
+      opacity: 1;
+      line-height: 2.7rem;
+
+      &:hover {
+        cursor: default !important;
+      }
+    }
+  }
+
+  #quick-info .icon-button-large:hover ~ #quick-info-body {
+    display: flex !important;
+  }
+
+  #quick-info-body {
+    position: absolute;
+    display: none;
+    right: 2rem;
+    padding: 1rem;
+    border-radius: 0.8rem;
   }
 }
 
@@ -183,7 +233,7 @@ menu .icon-button::after {
   display: flex;
   flex-direction: column;
   font-size: 3rem;
-  padding: 0.3rem 0.4rem;
+  padding: 0;
 }
 
 .icon-button-large:hover {
@@ -275,7 +325,7 @@ audio-file {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-top: 0.6rem;
+    margin-top: 0.8rem;
   }
 
   .audio-body {
@@ -290,16 +340,17 @@ audio-file {
 
     .checkmark, .batsu {
       font-size: 2rem;
-      line-height: 1rem;
+      line-height: 0;
     }
 
     .open-player {
       padding: 0;
+      margin-right: 0.5rem;
     }
 
     .audio-title {
       flex-grow: 1;
-      margin: 0.5rem 0 0.5rem 0.5rem;
+      margin: 0.5rem 0 0.5rem 0.3rem;
     }
   }
 

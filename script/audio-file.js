@@ -28,7 +28,7 @@ export class AudioFile extends HTMLElement {
     const audioTemplate = document.getElementById('audio-file').content.cloneNode(true)
     this.appendChild(audioTemplate)
 
-    const audioTitle = this.querySelector('.audio-title')
+    const audioTitle = this.querySelector('.audio-title .title-text')
     audioTitle.textContent = file.name
 
     const audioSubtitle = this.querySelector('.audio-subtitle')
@@ -162,9 +162,15 @@ export class AudioFile extends HTMLElement {
   }
 
   startLoading() {
-    this.querySelector('.button-play').classList.add('hidden')
-    this.querySelector('.button-pause').classList.add('hidden')
-    this.querySelector('.spinner').classList.remove('hidden')
+    if (this.querySelector('.audio-header').classList.contains('hidden')) {
+      this.querySelector('.audio-body .spinner').classList.remove('hidden')
+      this.querySelector('.open-player').classList.add('hidden')
+    } else {
+      this.querySelector('.audio-header .spinner').classList.remove('hidden')
+      this.querySelector('.button-play').classList.add('hidden')
+      this.querySelector('.button-pause').classList.add('hidden')
+    }
+
     this.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
@@ -174,9 +180,14 @@ export class AudioFile extends HTMLElement {
   }
 
   endLoading(successful = false) {
-    this.querySelector('.button-pause').classList.add('hidden')
-    this.querySelector('.spinner').classList.add('hidden')
-    this.querySelector('.button-play').classList.remove('hidden')
+    if (this.querySelector('.audio-header').classList.contains('hidden')) {
+      this.querySelector('.audio-body .spinner').classList.add('hidden')
+      this.querySelector('.open-player').classList.remove('hidden')
+    } else {
+      this.querySelector('.audio-header .spinner').classList.add('hidden')
+      this.querySelector('.button-pause').classList.add('hidden')
+      this.querySelector('.button-play').classList.remove('hidden')
+    }
 
     if (successful) {
       this.querySelector('.checkmark').classList.remove('hidden')

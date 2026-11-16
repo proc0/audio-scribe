@@ -153,6 +153,16 @@ audio-file {
   }
 }
 
+#quick-info {
+  .icon-button-large:hover {
+    color: rgb(120, 120, 120) !important;
+  }
+}
+
+#quick-info-body {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
 .error {
   color: #ee1212;
 }

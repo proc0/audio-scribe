@@ -11,7 +11,7 @@ import { AudioScribe } from './audio-scribe'
 // TODO: add welcome screen that disappears when adding first files that shows what it is and what to do
 // NOPE: add footer link references
 // NOPE: move info to bottom make it look like terminal
-// TODO: make audio player show only when pressing play
+// DONE: make audio player show only when pressing play
 // TODO: add README details, getting started, references etc.
 // TODO: build to compressed chunks with Vite
 // TODO: publish website
