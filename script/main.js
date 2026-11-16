@@ -8,15 +8,15 @@ import { AudioScribe } from './audio-scribe'
 
 // DONE: add a clear button for clearing audio files
 // DONE: add an input element for the filename in output tab
-// TODO: add welcome screen that disappears when adding first files that shows what it is and what to do
+// DONE: add welcome screen that disappears when adding first files that shows what it is and what to do
 // NOPE: add footer link references
 // NOPE: move info to bottom make it look like terminal
 // DONE: make audio player show only when pressing play
+// NOPE: add a side-by-side option to see input and output tab side by side
+// NOPE: add popup on transcribe button when it's disabled because there is no audio model loaded
 // TODO: add README details, getting started, references etc.
 // TODO: build to compressed chunks with Vite
 // TODO: publish website
-// LAB: add a side-by-side option to see input and output tab side by side
-// LAB: add popup on transcribe button when it's disabled because there is no audio model loaded
 
 (async () => {
   let initState = STATE_CHECKING;

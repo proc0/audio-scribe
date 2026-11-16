@@ -122,6 +122,10 @@ details {
   white-space: pre-wrap;
 }
 
+details#info {
+  margin-bottom: 1rem;
+}
+
 menu {
   width: 68%;
   display: flex;
