@@ -341,6 +341,7 @@ audio-file {
     font-size: 1.35rem;
     font-weight: normal;
     margin-bottom: 0.8rem;
+    padding-top: 0.5rem;
     z-index: 1;
 
     .checkmark, .batsu {
@@ -474,8 +475,9 @@ audio-file {
 }
 
 .spinner {
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0.5rem 0;
   border: 0.3rem solid rgb(176, 185, 175);
   border-bottom-color: rgb(117, 185, 12);
   border-radius: 50%;

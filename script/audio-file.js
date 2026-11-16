@@ -202,6 +202,7 @@ export class AudioFile extends HTMLElement {
     if (!document.querySelectorAll('audio-file').length) {
       document.getElementById('audio-files').classList.add('empty-input')
       document.getElementById('transcribe').disabled = true
+      document.getElementById('clear-input').disabled = true
     }
   }
 }

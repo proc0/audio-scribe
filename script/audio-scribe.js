@@ -237,7 +237,7 @@ export class AudioScribe {
     }
 
     if (inputTab.querySelector('audio-file')) {
-      inputTab.querySelector('.quick-start').remove()
+      inputTab.querySelector('.quick-start')?.remove()
       inputTab.classList.remove('empty-input')
     }
 
@@ -325,7 +325,7 @@ export class AudioScribe {
   }
 
   async clearCache(event) {
-    if (event.currentTarget.disabled) return
+    if (event.target.disabled) return
 
     // confirm clear cache
     const currentSize = await this.getCacheSize()
@@ -339,28 +339,34 @@ export class AudioScribe {
 
     this.update(STATE_CLEARING, 'Clearing cache...')
 
+    if (this.audioModel) {
+      this.audioModel.dispose()
+    }
+
     await clearModelCache();
 
     const newSize = await this.getCacheSize()
-    event.currentTarget.disabled = newSize < 1
+    event.target.disabled = newSize < 1
 
-    this.update(this.lastState, `Deleted ~${currentSize}MB. ${this.getCacheSizeText(newSize)} remaining.`)
+    this.update(this.lastState, `Deleted ${this.getCacheSizeText(newSize)}. ${this.getCacheSizeText(newSize)} remains.`)
   }
 
   async getCacheSize() {
     const info = await getCacheInfo()
-    const usedMB = info ? (info.used / 1024 / 1024).toFixed(0) : 0
+    const usedMB = info ? (info.used / 1024 / 1024) : 0
 
     return usedMB
   }
 
   getCacheSizeText(usedMB) {
-    let infoText = 'Cache is empty'
+    let infoText = '0'
 
     if (usedMB >= 1000) {
-      infoText = `${(usedMB / 1024).toFixed(1)}GB cached`;
+      infoText = `${(usedMB / 1024).toFixed(1)}GB`;
     } else if (usedMB >= 1) {
-      infoText = `${usedMB.toFixed(0)}MB cached`;
+      infoText = `${usedMB.toFixed(0)}MB`;
+    } else {
+      infoText = `${usedMB.toFixed(0)}KB`
     }
 
     return infoText
