@@ -94,11 +94,13 @@ export class AudioScribe {
     
     // handle transcribe button
     document.getElementById('transcribe').addEventListener('click', this.transcribe.bind(this))
+    document.getElementById('clear-input').addEventListener('click', this.clearInput.bind(this))
     // handle output tab save button
     document.getElementById('output-text').addEventListener('keyup', (event) => {
       document.getElementById('save').disabled = event.currentTarget.value.length === 0
     })
     document.getElementById('save').addEventListener('click', this.saveOutput.bind(this))
+    document.getElementById('copy').addEventListener('click', this.copyToClipboard.bind(this))
 
     // check model status
     if (!this.audioModel) {
@@ -234,6 +236,7 @@ export class AudioScribe {
     if (this.audioModel) {
       document.querySelector('#transcribe').disabled = false
     }
+    document.querySelector('#clear-input').disabled = false
 
     this.update(STATE_DEFAULT, `Loaded ${files.length} audio file(s)`)
   }
@@ -282,6 +285,7 @@ export class AudioScribe {
 
     // toggle buttons
     document.getElementById('save').disabled = outputText.value.length === 0
+    document.getElementById('copy').disabled = outputText.value.length === 0
     transcribeButton.disabled = false
 
     this.update(STATE_READY, `Transcribed ${fileCount} of ${totalFiles} files`)
@@ -305,6 +309,11 @@ export class AudioScribe {
     //   // updateSpinner(null, `${tokenCount} tokens · ${elapsed}s`);
     //   return false;
     // };
+  }
+
+  clearInput(event) {
+    document.querySelectorAll('audio-file').forEach(audioFile => audioFile.delete())
+    document.getElementById('clear-input').disabled = true
   }
 
   async clearCache(event) {
@@ -407,5 +416,17 @@ export class AudioScribe {
     }
 
     await this.addAudioFiles(audioFiles)
+  }
+
+  copyToClipboard(event) {
+    try {
+      const text = document.getElementById('output-text').value
+      return navigator.clipboard.writeText(text).then(() => {
+        this.update(STATE_DEFAULT, 'Output text copied to clipboard.')
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      this.update(STATE_ERROR, `Failed to copy to clipboard: ${message}`)
+    }
   }
 }

@@ -81,14 +81,7 @@ export class AudioFile extends HTMLElement {
     
     // handle delete audio file
     const buttonRemove = this.querySelector('.button-remove')
-    buttonRemove.addEventListener('click', () => {
-      this.remove()
-      // toggle transcribe button disabled
-      if (!document.querySelectorAll('audio-file').length) {
-        document.getElementById('audio-files').classList.add('empty-input')
-        document.getElementById('transcribe').disabled = true
-      }
-    })
+    buttonRemove.addEventListener('click', this.delete.bind(this))
   }
 
   formatSize(bytes) {
@@ -181,6 +174,15 @@ export class AudioFile extends HTMLElement {
       this.querySelector('.checkmark').classList.remove('hidden')
     } else {
       this.querySelector('.batsu').classList.remove('hidden')
+    }
+  }
+
+  delete() {
+    this.remove()
+    // toggle transcribe button disabled
+    if (!document.querySelectorAll('audio-file').length) {
+      document.getElementById('audio-files').classList.add('empty-input')
+      document.getElementById('transcribe').disabled = true
     }
   }
 }

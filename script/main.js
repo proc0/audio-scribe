@@ -7,9 +7,10 @@ import {
 import { AudioScribe } from './audio-scribe'
 
 // TODO: add a clear button for clearing audio files
-// TODO: add an input element for the filename in output tab
+// DONE: add an input element for the filename in output tab
 // TODO: add welcome screen that disappears when adding first files that shows what it is and what to do
 // TODO: add footer link references
+// TODO: move info to bottom make it look like terminal
 // TODO: add README details, getting started, references etc.
 // TODO: build to compressed chunks with Vite
 // TODO: publish website
