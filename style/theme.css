@@ -14,6 +14,14 @@ html {
   z-index: -1;
 }
 
+a {
+  color: rgb(94, 94, 142);
+}
+
+a:hover {
+  color: rgb(114, 114, 162);
+}
+
 menu {
   background-color: rgb(28, 26, 25);
   box-shadow: inset 0.5rem 0.4rem 1rem rgb(14, 15, 15);
